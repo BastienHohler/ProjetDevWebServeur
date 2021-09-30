@@ -1,25 +1,45 @@
 <?php
-// bootstrap.php
+# bootstrap.php
+
+require_once join(DIRECTORY_SEPARATOR, [__DIR__, 'vendor', 'autoload.php']);
+
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
+use Slim\Factory\AppFactory;
+use DI\Container;
 
-require_once "vendor/autoload.php";
 
-// Create a simple "default" Doctrine ORM configuration for Annotations
-$isDevMode = true;
-$proxyDir = null;
-$cache = null;
-$useSimpleAnnotationReader = false;
-$config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/src"), $isDevMode, $proxyDir, $cache, $useSimpleAnnotationReader);
-// or if you prefer yaml or XML
-//$config = Setup::createXMLMetadataConfiguration(array(__DIR__."/config/xml"), $isDevMode);
-//$config = Setup::createYAMLMetadataConfiguration(array(__DIR__."/config/yaml"), $isDevMode);
+$container = new Container();
+AppFactory::setContainer($container);
+$app = AppFactory::create();
+$container = $app->getContainer();
 
-// database configuration parameters
-$conn = array(
-    'driver' => 'pdo_sqlite',
-    'path' => __DIR__ . '/db.sqlite',
-);
+$container->set('myService',function() {
+    $entitiesPath = [
+                    join(DIRECTORY_SEPARATOR, [__DIR__, "src", "Entity"])
+                    ];
 
-// obtaining the entity manager
-$entityManager = EntityManager::create($conn, $config);
+    $isDevMode = true;
+    $proxyDir = null;
+    $cache = null;
+    $useSimpleAnnotationReader = false;
+
+    $dbParams = [
+        'driver'   => 'pdo_mysql',
+        'host'     => 'localhost',
+        'charset'  => 'utf8',
+        'user'     => 'bastien',
+        'password' => 'sqlpass',
+        'dbname'   => 'ProjetWebServeur',
+    ];
+    $config = Setup::createAnnotationMetadataConfiguration(
+        $entitiesPath,
+        $isDevMode,
+        $proxyDir,
+        $cache,
+        $useSimpleAnnotationReader
+    );
+    return EntityManager::create($dbParams, $config);
+});
+
+return $container;

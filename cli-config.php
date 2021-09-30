@@ -1,5 +1,11 @@
 <?php
-// cli-config.php
-require_once "bootstrap.php";
+# cli-config.php
 
-return \Doctrine\ORM\Tools\Console\ConsoleRunner::createHelperSet($entityManager);
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Slim\Container;
+
+
+$container = require_once join(DIRECTORY_SEPARATOR, [__DIR__, 'bootstrap.php']);
+
+return ConsoleRunner::createHelperSet($container[EntityManager::class]);
