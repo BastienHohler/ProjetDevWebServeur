@@ -1,45 +1,46 @@
 <?php
-# bootstrap.php
+declare(strict_types=1);
 
-require_once join(DIRECTORY_SEPARATOR, [__DIR__, 'vendor', 'autoload.php']);
+use DI\ContainerBuilder;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Monolog\Processor\UidProcessor;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Cache\FileSystemCache;
 use Doctrine\ORM\EntityManager;
-use Slim\Factory\AppFactory;
-use DI\Container;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Tools\Setup;
 
+return function (ContainerBuilder $containerBuilder) {
+    $containerBuilder->addDefinitions([
+        EntityManager::class => function (ContainerInterface $container): EntityManager {
+            $settings = $container->get('settings');
 
-$container = new Container();
-AppFactory::setContainer($container);
-$app = AppFactory::create();
-$container = $app->getContainer();
+            $config = Setup::createAnnotationMetadataConfiguration(
+                $settings['doctrine']['metadata_dirs'],
+                $settings['doctrine']['dev_mode']
+            );
 
-$container->set('myService',function() {
-    $entitiesPath = [
-                    join(DIRECTORY_SEPARATOR, [__DIR__, "src", "Entity"])
-                    ];
+            $config->setMetadataDriverImpl(
+                new AnnotationDriver(
+                    new AnnotationReader,
+                    $settings['doctrine']['metadata_dirs']
+                )
+            );
 
-    $isDevMode = true;
-    $proxyDir = null;
-    $cache = null;
-    $useSimpleAnnotationReader = false;
+            $config->setMetadataCacheImpl(
+                new FileSystemCache(
+                  $settings['doctrine']['cache_dir']
+                )
+            );
 
-    $dbParams = [
-        'driver'   => 'pdo_mysql',
-        'host'     => 'localhost',
-        'charset'  => 'utf8',
-        'user'     => 'bastien',
-        'password' => 'sqlpass',
-        'dbname'   => 'ProjetWebServeur',
-    ];
-    $config = Setup::createAnnotationMetadataConfiguration(
-        $entitiesPath,
-        $isDevMode,
-        $proxyDir,
-        $cache,
-        $useSimpleAnnotationReader
-    );
-    return EntityManager::create($dbParams, $config);
-});
-
-return $container;
+            return EntityManager::create(
+                $settings['doctrine']['connection'],
+                $config
+            );
+        }
+    ]);
+};

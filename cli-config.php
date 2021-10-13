@@ -1,11 +1,33 @@
 <?php
-# cli-config.php
+
+// cli-config.php
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
-use Slim\Container;
 
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\Tools\Console\Command\SchemaTool;
+use Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand;
+use DI\ContainerBuilder;
 
-$container = require_once join(DIRECTORY_SEPARATOR, [__DIR__, 'bootstrap.php']);
+require __DIR__ . '/vendor/autoload.php';
 
-return ConsoleRunner::createHelperSet($container[EntityManager::class]);
+// Instantiate PHP-DI ContainerBuilder
+$containerBuilder = new ContainerBuilder();
+
+if (false) { // Should be set to true in production
+	$containerBuilder->enableCompilation(__DIR__ . '/var/cache');
+}
+
+// Set up settings
+$settings = require __DIR__ . '/settings.php';
+$settings($containerBuilder);
+
+// Set up dependencies
+$dependencies = require __DIR__ . '/bootstrap.php';
+$dependencies($containerBuilder);
+
+// Build PHP-DI Container instance
+$container = $containerBuilder->build();
+
+return ConsoleRunner::createHelperSet($container->get(EntityManager::class));

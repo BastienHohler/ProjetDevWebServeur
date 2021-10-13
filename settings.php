@@ -1,10 +1,11 @@
 <?php
 
 // settings.php
-
+use DI\ContainerBuilder;
 define('APP_ROOT', __DIR__);
 
-return [
+return function (ContainerBuilder $containerBuilder) {
+    $containerBuilder->addDefinitions([
     'settings' => [
         'displayErrorDetails' => true,
         'determineRouteBeforeAppMiddleware' => false,
@@ -18,17 +19,18 @@ return [
             'cache_dir' => APP_ROOT . '/var/doctrine',
 
             // you should add any other path containing annotated entity classes
-            'metadata_dirs' => [APP_ROOT . '/src/Domain'],
+            'metadata_dirs' => [APP_ROOT . '/src/Model'],
 
             'connection' => [
                 'driver' => 'pdo_mysql',
                 'host' => 'localhost',
                 'port' => 3306,
-                'dbname' => 'mydb',
-                'user' => 'user',
-                'password' => 'secret',
-                'charset' => 'utf-8'
+                'dbname' => 'projet',
+                'user' => 'root',
+                'password' => '',
+                'charset' => 'utf8'
             ]
         ]
     ]
-];
+]);
+};
