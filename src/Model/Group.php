@@ -29,7 +29,7 @@ class Group
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Board")
+     * @ORM\ManyToOne(targetEntity="Board", inversedBy="group")
      * @var Board An Board of Board objects.
      */
     private $board;

@@ -67,9 +67,9 @@ class Adresse
         $this->cp = $cp;
     }
 
-    public function __construct()
+    public function __construct(User $user)
     {
-        $this->listUsers = new ArrayCollection();
+        $this->listUsers[] = $user;
     }
 
     public function addUser(User $user)

@@ -19,7 +19,12 @@ $app->get('/hello', function (Request $request, Response $response) {
     return $response;
 });
 
-$app->get('/createUser/[{name},{login},{password}]', function (Request $request, Response $response, array $args) {
+$app->get('/', function(Request $request, Response $response) {
+    $response->getBody()->write('Accueil.');
+    return $response;
+});
+
+$app->post('/createUser/[{name},{login},{password}]', function (Request $request, Response $response, array $args) {
     $uc = new userController($this->get(EntityManager::class),"a");
     $response->getBody()->write($uc->createUser($args['name'],$args['login'],$args['password']));
     return $response;

@@ -14,6 +14,7 @@ use function json_encode;
 
 require_once __DIR__ . '/../Model/User.php';
 
+
 class userController implements RequestHandlerInterface
 {
     /**
@@ -31,9 +32,6 @@ class userController implements RequestHandlerInterface
         $user->setNom($name);
         $user->setLogin($login);
         $user->setPassword($password);
-        $user->setMail("a@gmail.com");
-        $user->setEtat("a");
-        $user->setAnonyme(true);
         $this->em->persist($user);
         $this->em->flush();
         return "Bienvenue, ".$name.". Votre ID est : ".$user->getId().".";

@@ -23,7 +23,7 @@ class Board
     private $contends;
 
     /**
-     * @ORM\OneToOne(targetEntity="Group", mappedBy="Board")
+     * @ORM\OneToMany(targetEntity="Group", mappedBy="board")
      * @var Group An Group of Group objects.
      */
     private $group;

@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
+require_once __DIR__ . '/../Model/Adresse.php';
 
 /**
  * Option
@@ -47,7 +48,10 @@ class User
      */
     private $etat;
 
-
+    /**
+     * @ORM\ManyToOne(targetEntity="Adresse", inversedBy="listUsers")
+     */
+    private $adresse;
 
     public function getId() {
         return $this->id;
