@@ -33,24 +33,21 @@ class User
     private $password;
 
     /**
-     * @ORM\Column(name="mail", type="string")
+     * @ORM\Column(name="mail", type="string", nullable=true)
      */
     private $mail;
 
     /**
-     * @ORM\Column(name="anonyme", type="boolean")
+     * @ORM\Column(name="anonyme", type="boolean", nullable=true)
      */
     private $anonyme;
 
     /**
-     * @ORM\Column(name="etat", type="string")
+     * @ORM\Column(name="etat", type="string", nullable=true)
      */
     private $etat;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Adresse", inversedBy="listUsers")
-     */
-    private $adresse;
+
 
     public function getId() {
         return $this->id;

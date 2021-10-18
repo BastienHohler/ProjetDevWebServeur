@@ -15,7 +15,7 @@ use Invoker\ParameterResolver\Container\TypeHintContainerResolver;
 use Invoker\ParameterResolver\DefaultValueResolver;
 use Invoker\ParameterResolver\ResolverChain;
 
-require __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $containerBuilder = new ContainerBuilder();
 
@@ -31,7 +31,7 @@ $app = AppFactory::create();
 $app->addRoutingMiddleware();
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
-require __DIR__ . '/../src/Controllers/UserController.php';
-require __DIR__ . '/../config/route.php';
+require_once __DIR__ . '/../src/Controllers/userController.php';
+require_once __DIR__ . '/../config/route.php';
 
 $app->run();

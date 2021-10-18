@@ -31,11 +31,11 @@ return function (ContainerBuilder $containerBuilder) {
                 )
             );
 
-            $config->setMetadataCacheImpl(
+           /* $config->setMetadataCacheImpl(
                 new FileSystemCache(
                   $settings['doctrine']['cache_dir']
                 )
-            );
+            );*/
 
             return EntityManager::create(
                 $settings['doctrine']['connection'],
