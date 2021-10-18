@@ -15,13 +15,13 @@ class Adresse
      * @ORM\Id
      * * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\OneToMany(targetEntity="User", mappedBy="adresse")
-     * @var User[] An ArrayCollection of Bug objects.
+     * @var User[] An ArrayCollection of User objects.
      */
-     private $listeUser;
+     private $listUsers;
 
     /**
      * @ORM\Column(name="rue", type="string")
@@ -69,17 +69,13 @@ class Adresse
 
     public function __construct()
     {
-        $this->listeUser = new ArrayCollection();
+        $this->listUsers = new ArrayCollection();
     }
 
     public function addUser(User $user)
     {
-        $this->listeUser[] = $user;
+        $this->listUsers[] = $user;
     }
 
-    public function getUser()
-    {
-        return $this->listeUser;
-    }
-    
+
 }

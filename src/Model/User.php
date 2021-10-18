@@ -15,23 +15,42 @@ class User
      * @ORM\Id
      * * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\Column(name="nom", type="string")
      */
-    protected $nom;
+    private $nom;
 
     /**
      * @ORM\Column(name="login", type="string")
      */
-    protected $login;
+    private $login;
 
     /**
      * @ORM\Column(name="password", type="string")
      */
-    protected $password;
+    private $password;
 
+    /**
+     * @ORM\Column(name="mail", type="string")
+     */
+    private $mail;
+
+    /**
+     * @ORM\Column(name="anonyme", type="boolean")
+     */
+    private $anonyme;
+
+    /**
+     * @ORM\Column(name="etat", type="string")
+     */
+    private $etat;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Adresse", inversedBy="listUsers")
+     */
+    private $adresse;
 
     public function getId() {
         return $this->id;
@@ -61,33 +80,30 @@ class User
         $this->password = $password;
     }
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     */
-    private $listeAmis;
-
-    public function __construct()
-    {
-        $this->listeAmis = new ArrayCollection();
+    public function getMail() {
+        return $this->password;
+    }
+    public function setMail( $mail ) {
+        $this->mail = $mail;
     }
 
-    public function addAmis(User $ami)
-    {
-        $this->listeAmis[] = $ami;
+    public function getAnonyme() {
+        return $this->anonyme;
+    }
+    public function setAnonyme( $anonyme ) {
+        $this->anonyme = $anonyme;
     }
 
-    public function getAmis()
-    {
-        return $this->listeAmis;
+    public function getEtat() {
+        return $this->etat;
     }
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Adresse")
-     */
-    private $adresse;
+    public function setEtat( $etat ) {
+        $this->etat = $etat;
+    }
 
     public function setAdresse(Adresse $adresse)
     {
+        $adresse->addUser($this);
         $this->adresse = $adresse;
     }
 

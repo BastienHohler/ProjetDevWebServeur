@@ -25,7 +25,7 @@ return function (ContainerBuilder $containerBuilder) {
                 'driver' => 'pdo_mysql',
                 'host' => 'localhost',
                 'port' => 3306,
-                'dbname' => 'projet',
+                'dbname' => 'test',
                 'user' => 'root',
                 'password' => '',
                 'charset' => 'utf8'
