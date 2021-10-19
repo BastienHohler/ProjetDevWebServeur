@@ -2,6 +2,8 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Doctrine\ORM\EntityManager;
+use Slim\Views\Twig;
+use Slim\Views\TwigMiddleware;
 
 require_once __DIR__ . '/../src/Controllers/userController.php';
 
@@ -14,15 +16,26 @@ $app->get('/hello/{name}', function (Request $request, Response $response, $args
     return $response;
 });
 
-$app->get('/hello', function (Request $request, Response $response) {
-    $response->getBody()->write('Hello!');
+$app->get('/', function (Request $request, Response $response) {
+    $view = Twig::fromRequest($request);
+    return $view->render($response, 'index.php');
     return $response;
 });
 
-$app->get('/createUser/[{name},{login},{password}]', function (Request $request, Response $response, array $args) {
-    $uc = new userController($this->get(EntityManager::class),"a");
-    $response->getBody()->write($uc->createUser($args['name'],$args['login'],$args['password']));
+$app->get('/signUp', function ($request, $response) {
+    $view = Twig::fromRequest($request);
+    return $view->render($response, 'signUp.php');
+});
+
+$app->post('/user', function (Request $request, Response $response, array $args) {
+    $uc = new UserController($this->get(EntityManager::class));
+    $parsedBody = $request->getParsedBody();
+    $response->getBody()->write($uc->createUser($parsedBody['name'],$parsedBody['login'],$parsedBody['password']));
     return $response;
 });
 
-$app->delete('/user/{id}', [UserController::class, 'delete']);
+$app->get('/deleteUser/{id}', function (Request $request, Response $response, array $args) {
+    $uc = new UserController($this->get(EntityManager::class));
+    $response->getBody()->write($uc->deleteUser($args['id']));
+    return $response;
+});
