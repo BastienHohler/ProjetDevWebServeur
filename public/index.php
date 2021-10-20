@@ -14,6 +14,8 @@ use Invoker\ParameterResolver\AssociativeArrayResolver;
 use Invoker\ParameterResolver\Container\TypeHintContainerResolver;
 use Invoker\ParameterResolver\DefaultValueResolver;
 use Invoker\ParameterResolver\ResolverChain;
+use Slim\Views\Twig;
+use Slim\Views\TwigMiddleware;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -27,6 +29,12 @@ $settings($containerBuilder);
 $container = $containerBuilder->build();
 AppFactory::setContainer($container);
 $app = AppFactory::create();
+
+// Create Twig
+$twig = Twig::create('./../src/Interface', ['cache' => false]);
+
+// Add Twig-View Middleware
+$app->add(TwigMiddleware::create($app, $twig));
 // Add Slim routing middleware
 $app->addRoutingMiddleware();
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);

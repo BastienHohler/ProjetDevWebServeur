@@ -5,27 +5,21 @@ declare(strict_types=1);
 //namespace UMA\DoctrineDemo\Action;
 
 use Doctrine\ORM\EntityManager;
-use Faker;
 use Nyholm\Psr7;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use function json_encode;
 
 require_once __DIR__ . '/../Model/User.php';
 
 
 class userController implements RequestHandlerInterface
+
 {
     /**
      * @var EntityManager
      */
     private $em;
-
-    /*/**
-     * @var Faker\Generator
-     */
-    private $faker;
 
     public function createUser($name,$login,$password) {
         $user = new User();
@@ -37,28 +31,17 @@ class userController implements RequestHandlerInterface
         return "Bienvenue, ".$name.". Votre ID est : ".$user->getId().".";
     }
 
-    public function __construct(EntityManager $em, /*Faker\Generator*/ $faker)
+    function deleteUser($id)
+    {
+    $user = $this->em->find('App\Model\User', $id);
+
+    $this->em->remove($user);
+    $this->em->flush();
+}
+
+    public function __construct(EntityManager $em)
     {
         $this->em = $em;
-        $this->faker = $faker;
     }
 
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        $newRandomUser = new User($this->faker->name, $this->faker->password,$this->faker->login,$this->faker->mail);
-
-        $this->em->persist($newRandomUser);
-        $this->em->flush();
-
-        $body = Psr7\Stream::create(json_encode($newRandomUser, JSON_PRETTY_PRINT) . PHP_EOL);
-
-        return new Psr7\Response(
-            201,
-            [
-                'Content-Type' => 'application/json',
-                'Content-Length' => $body->getSize()
-            ],
-            $body
-        );
-    }
 }

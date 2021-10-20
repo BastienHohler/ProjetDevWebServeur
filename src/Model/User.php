@@ -1,5 +1,5 @@
 <?php
-
+namespace App\Model;
 use Doctrine\ORM\Mapping as ORM;
 require_once __DIR__ . '/../Model/Adresse.php';
 
