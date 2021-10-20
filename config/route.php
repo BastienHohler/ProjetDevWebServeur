@@ -19,7 +19,6 @@ $app->get('/hello/{name}', function (Request $request, Response $response, $args
 $app->get('/', function (Request $request, Response $response) {
     $view = Twig::fromRequest($request);
     return $view->render($response, 'index.php');
-    return $response;
 });
 
 
@@ -32,7 +31,8 @@ $app->post('/user', function (Request $request, Response $response, array $args)
     $uc = new UserController($this->get(EntityManager::class));
     $parsedBody = $request->getParsedBody();
     $response->getBody()->write($uc->createUser($parsedBody['name'],$parsedBody['login'],$parsedBody['password']));
-    return $response;
+    $view = Twig::fromRequest($request);
+    return $view->render($response,'home.php');
 });
 
 $app->get('/deleteUser/{id}', function (Request $request, Response $response, array $args) {

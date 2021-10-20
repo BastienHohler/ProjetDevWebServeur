@@ -4,11 +4,7 @@
     <meta charset="utf-8">
     <title></title>
   </head>
+  <header> Tracking de cas contact </header>
   <body>
-    <p> Bienvenue. </p>
-
-    <a href="/signUp">Créer un compte</a>
-    <a href="/signIn">Se connecter</a>
-
   </body>
 </html>

@@ -13,7 +13,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 require_once __DIR__ . '/../Model/User.php';
 
 
-class userController implements RequestHandlerInterface
+class UserController 
 
 {
     /**
@@ -31,13 +31,13 @@ class userController implements RequestHandlerInterface
         return "Bienvenue, ".$name.". Votre ID est : ".$user->getId().".";
     }
 
-    function deleteUser($id)
+    public function deleteUser($id)
     {
-    $user = $this->em->find('App\Model\User', $id);
-
-    $this->em->remove($user);
-    $this->em->flush();
-}
+        $user = $this->em->find('User', $id);
+        $this->em->remove($user);
+        $this->em->flush();
+        return "L'utilisateur ".$id." a bien été supprimé.";
+    }
 
     public function __construct(EntityManager $em)
     {

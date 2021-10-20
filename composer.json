@@ -8,7 +8,9 @@
         "symfony/cache": "^5.3",
         "doctrine/orm": "^2.10",
         "doctrine/cache": "1.12.1",
-        "selective/basepath": "^2.1"
+        "selective/basepath": "^2.1",
+        "twig/twig": "^3.1",
+        "slim/twig-view": "^3.2"
     },
     "autoload": {
         "psr-0": {"": "src/"},
