@@ -1,7 +1,7 @@
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Option
  * @ORM\Entity @ORM\Table(name="groups")
@@ -29,7 +29,7 @@ class Group
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Board", inversedBy="group")
+     * @ORM\ManyToOne(targetEntity="Board")
      * @var Board An Board of Board objects.
      */
     private $board;

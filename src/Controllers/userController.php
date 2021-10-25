@@ -11,29 +11,47 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 require_once __DIR__ . '/../Model/User.php';
+require_once __DIR__ . '/../Model/Adresse.php';
 
-
-class userController implements RequestHandlerInterface
-
+class UserController
 {
     /**
      * @var EntityManager
      */
     private $em;
 
-    public function createUser($name,$login,$password) {
+    public function createUser($parsedBody) {
         $user = new User();
-        $user->setNom($name);
-        $user->setLogin($login);
-        $user->setPassword($password);
+        $user->setNom($parsedBody['nom']);
+        $user->setPrenom($parsedBody['prenom']);
+        $user->setLogin($parsedBody['login']);
+        $user->setPassword(password_hash($parsedBody['password'], PASSWORD_DEFAULT));
+        $user->setMail($parsedBody['mail']);
+        if(isset($parsedBody['etat'])){
+          $user->setEtat("covided");
+        }else $user->setEtat("safe");
+        if(isset($parsedBody['anonyme'])){
+          $user->setAnonyme(true);
+        }else $user->setAnonyme(false);
+
+        $adresse = new Adresse();
+        $adresse->setRue($parsedBody['rue']);
+        $adresse->setVille($parsedBody['ville']);
+        $adresse->setCp($parsedBody['cp']);
+        $adresse->setPays($parsedBody['pays']);
+        $this->em->persist($adresse);
+        $this->em->flush();
+
+        $user->setAdresse($adresse);
         $this->em->persist($user);
         $this->em->flush();
-        return "Bienvenue, ".$name.". Votre ID est : ".$user->getId().".";
+        session_start();
+        $_SESSION["userName"] =$user->getPrenom();
     }
 
     function deleteUser($id)
     {
-    $user = $this->em->find('App\Model\User', $id);
+    $user = $this->em->find('User', $id);
 
     $this->em->remove($user);
     $this->em->flush();

@@ -22,6 +22,7 @@ $app->get('/', function (Request $request, Response $response) {
     return $response;
 });
 
+// route User
 
 $app->get('/signUp', function ($request, $response) {
     $view = Twig::fromRequest($request);
@@ -31,7 +32,9 @@ $app->get('/signUp', function ($request, $response) {
 $app->post('/user', function (Request $request, Response $response, array $args) {
     $uc = new UserController($this->get(EntityManager::class));
     $parsedBody = $request->getParsedBody();
-    $response->getBody()->write($uc->createUser($parsedBody['name'],$parsedBody['login'],$parsedBody['password']));
+    $uc->createUser($parsedBody);
+    $view = Twig::fromRequest($request);
+    return $view->render($response, 'index.php');
     return $response;
 });
 

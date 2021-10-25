@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Option
@@ -38,6 +39,10 @@ class Adresse
      */
     private $cp;
 
+    /**
+     * @ORM\Column(name="pays", type="string")
+     */
+    private $pays;
 
     public function getIdAdresse() {
         return $this->id;
@@ -67,9 +72,16 @@ class Adresse
         $this->cp = $cp;
     }
 
-    public function __construct(User $user)
+    public function getPays() {
+        return $this->pays;
+    }
+    public function setPays( $pays ) {
+        $this->pays = $pays;
+    }
+
+    public function __construct()
     {
-        $this->listUsers[] = $user;
+        $this->listUsers = new ArrayCollection();
     }
 
     public function addUser(User $user)

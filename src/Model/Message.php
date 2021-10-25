@@ -1,7 +1,7 @@
 <?php
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Option
  * @ORM\Entity @ORM\Table(name="messages")

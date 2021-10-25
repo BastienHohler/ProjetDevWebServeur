@@ -1,7 +1,7 @@
 <?php
-namespace App\Model;
+
 use Doctrine\ORM\Mapping as ORM;
-require_once __DIR__ . '/../Model/Adresse.php';
+
 
 /**
  * Option
@@ -24,6 +24,11 @@ class User
     private $nom;
 
     /**
+     * @ORM\Column(name="prenom", type="string")
+     */
+    private $prenom;
+
+    /**
      * @ORM\Column(name="login", type="string")
      */
     private $login;
@@ -34,24 +39,21 @@ class User
     private $password;
 
     /**
-     * @ORM\Column(name="mail", type="string", nullable=true)
+     * @ORM\Column(name="mail", type="string")
      */
     private $mail;
 
     /**
-     * @ORM\Column(name="anonyme", type="boolean", nullable=true)
+     * @ORM\Column(name="anonyme", type="boolean")
      */
     private $anonyme;
 
     /**
-     * @ORM\Column(name="etat", type="string", nullable=true)
+     * @ORM\Column(name="etat", type="string")
      */
     private $etat;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Adresse", inversedBy="listUsers")
-     */
-    private $adresse;
+
 
     public function getId() {
         return $this->id;
@@ -63,8 +65,17 @@ class User
     public function getNom() {
         return $this->nom;
     }
+
     public function setNom( $nom ) {
         $this->nom = $nom;
+    }
+
+    public function getPrenom() {
+        return $this->prenom;
+    }
+
+    public function setPrenom( $prenom ) {
+        $this->prenom = $prenom;
     }
 
     public function getLogin() {
