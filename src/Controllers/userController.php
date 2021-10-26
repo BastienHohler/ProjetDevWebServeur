@@ -40,13 +40,12 @@ class UserController
         $adresse->setCp($parsedBody['cp']);
         $adresse->setPays($parsedBody['pays']);
         $this->em->persist($adresse);
-        $this->em->flush();
 
         $user->setAdresse($adresse);
         $this->em->persist($user);
         $this->em->flush();
         session_start();
-        $_SESSION["userName"] =$user->getPrenom();
+        $_SESSION["userName"] =$user->getPrenom()." ".$user->getNom();
     }
 
     function deleteUser($id)

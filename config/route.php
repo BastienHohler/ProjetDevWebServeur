@@ -18,8 +18,10 @@ $app->get('/hello/{name}', function (Request $request, Response $response, $args
 
 $app->get('/', function (Request $request, Response $response) {
     $view = Twig::fromRequest($request);
-    return $view->render($response, 'index.php');
-    return $response;
+    session_start();
+    if(isset($_SESSION["userName"])){
+        return $view->render($response, 'index.php',['name' => $_SESSION["userName"]]);
+    }else return $view->render($response, 'index.php');
 });
 
 // route User
@@ -33,9 +35,7 @@ $app->post('/user', function (Request $request, Response $response, array $args)
     $uc = new UserController($this->get(EntityManager::class));
     $parsedBody = $request->getParsedBody();
     $uc->createUser($parsedBody);
-    $view = Twig::fromRequest($request);
-    return $view->render($response, 'index.php');
-    return $response;
+    header('Location: localhost:8080/');
 });
 
 $app->get('/deleteUser/{id}', function (Request $request, Response $response, array $args) {
