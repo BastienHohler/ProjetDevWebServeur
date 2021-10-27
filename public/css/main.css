@@ -302,6 +302,14 @@ h6 {
   background: linear-gradient(to top right, #08aeea 0%, #b721ff 100%);
 }
 
+.bg-gra-04 {
+  background: -webkit-gradient(linear, left bottom, right top, from(#08aeea), to(#b721ff));
+  background: -webkit-radial-gradient(white, #666);
+  background: -moz-radial-gradient(white, #666);
+  background: -o-radial-gradient(white, #666);
+  background: radial-gradient(white, #666);
+}
+
 /* ==========================================================================
    #SPACING
    ========================================================================== */
@@ -356,6 +364,7 @@ h6 {
 .m-b-55 {
   margin-bottom: 55px;
 }
+
 
 /* ==========================================================================
    #WRAPPER
@@ -767,4 +776,9 @@ input {
     padding: 40px 30px;
     padding-bottom: 50px;
   }
+}
+
+.messageError{
+  text-align: center;
+  color: #eb3746;
 }

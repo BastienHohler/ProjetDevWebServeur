@@ -28,15 +28,18 @@ $app->get('/', function (Request $request, Response $response) {
 
 $app->get('/signUp', function ($request, $response) {
     $view = Twig::fromRequest($request);
-    return $view->render($response, 'signUp.php');
+    session_start();
+    if(isset($_SESSION["messageError"])){
+        return $view->render($response, 'signUp.php',['messageError' => $_SESSION["messageError"]]);
+    }else return $view->render($response, 'signUp.php');
 });
 
-$app->post('/user', function (Request $request, Response $response, array $args) {
+$app->post('/user', function (Request $request, Response $response, array $args) use ($app) {
     $uc = new UserController($this->get(EntityManager::class));
     $parsedBody = $request->getParsedBody();
     $uc->createUser($parsedBody);
-    header('Location: localhost:8080/');
-});
+    return $response;
+})->add(redirectMiddleware::class);
 
 $app->get('/deleteUser/{id}', function (Request $request, Response $response, array $args) {
     $uc = new UserController($this->get(EntityManager::class));
