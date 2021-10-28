@@ -7,7 +7,6 @@
     <title></title>
   </head>
   <body>
-
   <header class="p-3 mb-3 border-bottom">
     <div class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -17,7 +16,7 @@
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="/friend" class="nav-link px-2 link-dark">Friends</a></li>
-          <li><a href="/messagerie" class="nav-link px-2 link-dark">Messages</a></li>
+          <li><a href="/message" class="nav-link px-2 link-dark">Messages</a></li>
           <li><a href="/group" class="nav-link px-2 link-dark">Groupe</a></li>
         </ul>
 
@@ -40,6 +39,29 @@
       </div>
     </div>
   </header>
+  <div class="container border">
+      <h2 class="text-center">Amis</h2>
+      <br><br>
+
+  {% for friend in listFriends %}
+    <div class="row">
+        <div class="col"><p class="friends">{{friend.prenom}} {{friend.nom}}</p></div>
+        <div class="col"><p class="delFriends"><a href="/deleteFriend/{{friend.id_friend}}">delete</a></p></div>
+    </div>
+    {% endfor %}
+    <br><br>
+    <h2 class="text-center">Demande en attente</h2>
+      <br><br>
+
+  {% for friendPending in listPending %}
+    <div class="row">
+        <div class="col"><p class="pending">{{friendPending.prenom}} {{friendPending.nom}}</p></div>
+        <div class="col"><p class="delPending"><a href="/deleteFriend/{{friendPending.id_friend}}">delete</a></p></div>
+    </div>
+    {% endfor %}
+  </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   </body>
 </html>

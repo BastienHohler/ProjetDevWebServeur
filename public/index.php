@@ -42,6 +42,7 @@ $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
 require_once __DIR__ . '/../src/Middleware/redirectMiddleware.php';
 require_once __DIR__ . '/../src/Controllers/userController.php';
+require_once __DIR__ . '/../src/Controllers/friendController.php';
 require_once __DIR__ . '/../config/route.php';
 
 $app->run();

@@ -21,7 +21,7 @@ $app->get('/', function (Request $request, Response $response) {
     $view = Twig::fromRequest($request);
     session_start();
     if(isset($_SESSION["userName"])){
-        return $view->render($response, 'index.php',['name' => $_SESSION["userName"]]);
+        return $view->render($response, 'index.php',['name' => $_SESSION["userName"], "id" => $_SESSION["userId"]]);
     }else return $view->render($response, 'signIn.php');
 });
 
@@ -88,6 +88,23 @@ $app->post('/send', function (Request $request, Response $response, array $args)
 
 $app->get('/deleteUser/{id}', function (Request $request, Response $response, array $args) {
     $uc = new UserController($this->get(EntityManager::class));
-    $response->getBody()->write($uc->deleteUser($args['id']));
+    $uc->deleteUser($args['id']);
     return $response;
+});
+
+$app->get('/signOut', function (Request $request, Response $response, array $args) {
+    $uc = new UserController($this->get(EntityManager::class));
+    $uc->signOut();
+    return $response;
+});
+
+$app->get('/friend', function (Request $request, Response $response) {
+    $view = Twig::fromRequest($request);
+    session_start();
+    if(isset($_SESSION["userName"])){
+        $uc = new FriendController($this->get(EntityManager::class));
+        $listFriends = $uc->listFriends($_SESSION["userId"]);
+        $listPending = $uc->pendingList($_SESSION["userId"]);
+        return $view->render($response, 'friends.php',['listFriends' => $listFriends, 'listPending' => $listPending, 'name' => $_SESSION["userName"], "id" => $_SESSION["userId"]]);
+    }
 });

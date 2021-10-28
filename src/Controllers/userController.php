@@ -104,6 +104,13 @@ public function login($parsedBody)
 
         $this->em->remove($user);
         $this->em->flush();
+        session_start();
+        session_unset();
+    }
+
+    function signOut(){
+      session_start();
+      session_unset();
     }
 
 }

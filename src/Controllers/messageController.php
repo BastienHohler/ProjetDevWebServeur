@@ -26,7 +26,7 @@ class MessageController
         $_SESSION["messageError"]="";
         $_SESSION["messageSuccess"]="";
         $message = new Message();
-        $sender = $this->em->getRepository(User::class)->findOneBy(['id'=>$_SESSION['userId']]);
+        $sender = $this->em->find('User', $_SESSION['userId']);
         $recipient =$this->em->getRepository(User::class)->findOneBy(['login'=>$parsedBody['recipient']]);
         if ($recipient==null) {
           $_SESSION["messageError"] = "Utilisateur introuvable.";

@@ -36,6 +36,45 @@ class FriendController
       $this->em->flush();
     }
 
+    function listFriends($id){
+        $user = $this->em->find('User', $id);
+        $listFriends = $this->em->getRepository(Friend::class)->findBy(array('user' => $user));
+        $list = array();
+        foreach($listFriends as $value){
+            $friend = $value->getFriend();
+            if($this->em->getRepository(Friend::class)->findBy(['user' => $friend, 'friend' => $value->getUser()])){
+                array_push($list,["prenom" => $friend->getPrenom(), "nom" => $friend->getNom(), "id_friend" => $value->getIdFriend()]);
+            }
+        }
+        return $list;
+    }
+
+    function pendingList($id){
+        $user = $this->em->find('User', $id);
+        $list = array();
+        $listPending = $this->em->getRepository(Friend::class)->findBy(array('user' => $user));
+        foreach($listPending as $value){
+            $friend = $value->getFriend();
+            if(!($this->em->getRepository(Friend::class)->findBy(['user' => $friend, 'friend' => $value->getUser()]))){
+                array_push($list,["prenom" => $friend->getPrenom(), "nom" => $friend->getNom(), "id_friend" => $value->getIdFriend()]);
+            }
+        }
+        return $list;
+    }
+
+    function requestList($id){
+        $user = $this->em->find('User', $id);
+        $listFriends = $this->em->getRepository(Friend::class)->findBy(array('user' => 63));
+        $list = array();
+        foreach($listFriends as $value){
+            $user = $value->getFriend();
+            if($this->em->getRepository(Friend::class)->findBy(['user' => $user, 'friend' => $value->getUser()])){
+                array_push($list,["prenom" => $user->getPrenom(), "nom" => $user->getNom(), "id_friend" => $user->getId()]);
+            }
+        }
+        return $list;
+    }
+
     public function __construct(EntityManager $em)
     {
         $this->em = $em;

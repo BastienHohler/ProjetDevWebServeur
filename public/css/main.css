@@ -365,7 +365,6 @@ h6 {
   margin-bottom: 55px;
 }
 
-
 /* ==========================================================================
    #WRAPPER
    ========================================================================== */
@@ -795,4 +794,12 @@ input {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 300px;
+}
+
+.friends{
+  text-align: right;
+}
+
+.pending{
+  text-align: right;
 }
