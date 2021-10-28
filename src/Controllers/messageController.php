@@ -22,26 +22,39 @@ class MessageController
     private $em;
 
     public function createMessage($parsedBody) {
+        session_start();
+        $_SESSION["messageError"]="";
+        $_SESSION["messageSuccess"]="";
         $message = new Message();
-        $message->setSender(find('User',$parsedBody['id_send']));
+        $sender = $this->em->find('User', $_SESSION['userId']);
+        $recipient =$this->em->getRepository(User::class)->findOneBy(['login'=>$parsedBody['recipient']]);
+        if ($recipient==null) {
+          $_SESSION["messageError"] = "Utilisateur introuvable.";
+          $_SESSION["header"] = "Location:http://localhost:8080/messagerie/new";
+        }
+        else {
+          $message->setSender($sender);
 
-        if(isset($parsedBody['id_recip'])){
-          $message->setRecipient(find('User',$parsedBody['id_recip']));
-        }else $message->setGroup($parsedBody['id_group']);
+          if(isset($parsedBody['recipient'])){
+            $message->setRecipient($recipient);
+          }else $message->setGroup($parsedBody['id_group']);
 
-        $message->setContends($parsedBody['contends']);
-        $this->em->persist($message);
-        $this->em->flush();
-
-        if(isset($parsedBody['titleFile'])){
-          $file = new File();
-          $file->setTitle($parsedBody['titleFile']);
-          $file->setDate($parsedBody['dateFile']);
-          $file->setExtension($parsedBody['extensionFile']);
-          $file->setMetadata($parsedBody['metadataFile']);
-          $file->setMessage($message);
-          $this->em->persist($file);
+          $message->setContents($parsedBody['content']);
+          $this->em->persist($message);
           $this->em->flush();
+
+          if(isset($parsedBody['titleFile'])){
+            $file = new File();
+            $file->setTitle($parsedBody['titleFile']);
+            $file->setDate($parsedBody['dateFile']);
+            $file->setExtension($parsedBody['extensionFile']);
+            $file->setMetadata($parsedBody['metadataFile']);
+            $file->setMessage($message);
+            $this->em->persist($file);
+            $this->em->flush();
+          }
+          $_SESSION["messageSuccess"] = "Message envoyé !";
+          $_SESSION["header"] = "Location:http://localhost:8080/messagerie/new";
         }
 
     }
@@ -53,6 +66,12 @@ class MessageController
       $this->em->remove($message);
       $this->em->flush();
     }
+
+    function getAll() {
+        session_start();
+        $messages = $this->em->getRepository(Message::class)->findBy(['recipient' => $_SESSION["userId"]]);
+        return $messages;
+      }
 
     public function __construct(EntityManager $em)
     {

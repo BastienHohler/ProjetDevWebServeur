@@ -66,6 +66,9 @@ class User
         return $this->nom;
     }
 
+    public function getFullName() {
+        return $this->prenom . ' ' . $this->nom;
+    }
     public function setNom( $nom ) {
         $this->nom = $nom;
     }

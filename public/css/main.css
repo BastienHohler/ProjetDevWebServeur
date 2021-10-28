@@ -782,10 +782,32 @@ input {
   color: #eb3746;
 }
 
+.messageSuccess{
+  text-align: center;
+  color: green;
+}
+
+.msg_open{
+  text-decoration: none;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+}
+
 .friends{
   text-align: right;
 }
 
 .pending{
   text-align: right;
+}
+
+.applicant{
+  text-align: right;
+}
+
+.container{
+  padding: 1%;
 }

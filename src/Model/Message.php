@@ -29,11 +29,11 @@ class Message
       */
       private $recipient;
 
-      /**
+      /*/**
        * @ORM\ManyToOne(targetEntity="Group")
        * @var Group
        */
-       private $group;
+       //private $group;
 
     /**
      * @ORM\Column(name="contents", type="string")
@@ -68,11 +68,11 @@ class Message
         $this->recipient = $recipient;
     }
 
-    public function getContends() {
-        return $this->contends;
+    public function getContents() {
+        return $this->contents;
     }
-    public function setContends( $contends ) {
-        $this->contends = $contends;
+    public function setContents( $contents ) {
+        $this->contents = $contents;
     }
 
     public function __construct()

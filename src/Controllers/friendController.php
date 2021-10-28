@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 require_once __DIR__ . '/../Model/User.php';
-require_once __DIR__ . '/../Model/friend.php';
+require_once __DIR__ . '/../Model/Friend.php';
 
 class FriendController
 {
@@ -22,18 +22,27 @@ class FriendController
 
     public function createFriend($parsedBody) {
         $friend = new Friend();
-        $friend->setUser(find('User',$parsedBody['id_user']));
-        $friend->setFriend(find('User',$parsedBody['id_friend']));
+        session_start();
+        $friend->setUser($this->em->find('User',$_SESSION["userId"]));
+        $friend->setFriend($this->em->find('User',$parsedBody['id_friend']));
         $this->em->persist($friend);
         $this->em->flush();
+        $_SESSION["header"] = "Location:http://localhost:8080/friend";
     }
 
     function deleteFriend($id)
     {
+        session_start();
       $friend = $this->em->find('Friend', $id);
-
-      $this->em->remove($friend);
-      $this->em->flush();
+        if($_SESSION["userId"] == $friend->getUser()->getId()){
+            $this->em->remove($friend);
+            $this->em->flush();
+            if($user = $this->em->getRepository(Friend::class)->findOneBy(['user' => $friend->getFriend(), 'friend' => $friend->getUser()])){
+                $this->em->remove($user);
+                $this->em->flush();
+            }
+        }
+        $_SESSION["header"] = "Location:http://localhost:8080/friend";
     }
 
     function listFriends($id){
@@ -42,7 +51,7 @@ class FriendController
         $list = array();
         foreach($listFriends as $value){
             $friend = $value->getFriend();
-            if($this->em->getRepository(Friend::class)->findBy(['user' => $friend, 'friend' => $value->getUser()])){
+            if($this->em->getRepository(Friend::class)->findOneBy(['user' => $friend, 'friend' => $value->getUser()])){
                 array_push($list,["prenom" => $friend->getPrenom(), "nom" => $friend->getNom(), "id_friend" => $value->getIdFriend()]);
             }
         }
@@ -55,7 +64,7 @@ class FriendController
         $listPending = $this->em->getRepository(Friend::class)->findBy(array('user' => $user));
         foreach($listPending as $value){
             $friend = $value->getFriend();
-            if(!($this->em->getRepository(Friend::class)->findBy(['user' => $friend, 'friend' => $value->getUser()]))){
+            if(!($this->em->getRepository(Friend::class)->findOneBy(['user' => $friend, 'friend' => $value->getUser()]))){
                 array_push($list,["prenom" => $friend->getPrenom(), "nom" => $friend->getNom(), "id_friend" => $value->getIdFriend()]);
             }
         }
@@ -64,12 +73,12 @@ class FriendController
 
     function requestList($id){
         $user = $this->em->find('User', $id);
-        $listFriends = $this->em->getRepository(Friend::class)->findBy(array('user' => 63));
+        $listRequest = $this->em->getRepository(Friend::class)->findBy(array('friend' => $id));
         $list = array();
-        foreach($listFriends as $value){
-            $user = $value->getFriend();
-            if($this->em->getRepository(Friend::class)->findBy(['user' => $user, 'friend' => $value->getUser()])){
-                array_push($list,["prenom" => $user->getPrenom(), "nom" => $user->getNom(), "id_friend" => $user->getId()]);
+        foreach($listRequest as $value){
+            $applicant = $value->getUser();
+            if(!($this->em->getRepository(Friend::class)->findOneBy(['user' => $id, 'friend' => $applicant]))){
+                array_push($list,["prenom" => $applicant->getPrenom(), "nom" => $applicant->getNom(), "id_friend" => $applicant->getId(), "id" => $value->getIdFriend()]);
             }
         }
         return $list;
