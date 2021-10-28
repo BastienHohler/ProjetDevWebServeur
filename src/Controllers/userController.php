@@ -63,11 +63,18 @@ class UserController
 
     $this->em->remove($user);
     $this->em->flush();
+    session_start();
+    session_unset();
 }
 
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
+    }
+
+    function signOut(){
+      session_start();
+      session_unset();
     }
 
 }

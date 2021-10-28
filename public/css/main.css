@@ -365,7 +365,6 @@ h6 {
   margin-bottom: 55px;
 }
 
-
 /* ==========================================================================
    #WRAPPER
    ========================================================================== */
@@ -781,4 +780,12 @@ input {
 .messageError{
   text-align: center;
   color: #eb3746;
+}
+
+.friends{
+  text-align: right;
+}
+
+.pending{
+  text-align: right;
 }
