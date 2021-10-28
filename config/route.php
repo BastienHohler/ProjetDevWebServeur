@@ -108,3 +108,9 @@ $app->get('/friend', function (Request $request, Response $response) {
         return $view->render($response, 'friends.php',['listFriends' => $listFriends, 'listPending' => $listPending, 'name' => $_SESSION["userName"], "id" => $_SESSION["userId"]]);
     }
 });
+
+$app->get('/deleteMessage/{id}', function (Request $request, Response $response, array $args) {
+    $mc = new MessageController($this->get(EntityManager::class));
+    $mc->deleteMessage($args['id']);
+    return $response;
+});

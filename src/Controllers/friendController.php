@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 require_once __DIR__ . '/../Model/User.php';
-require_once __DIR__ . '/../Model/friend.php';
+require_once __DIR__ . '/../Model/Friend.php';
 
 class FriendController
 {

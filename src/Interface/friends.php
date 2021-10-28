@@ -16,7 +16,7 @@
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="/friend" class="nav-link px-2 link-dark">Friends</a></li>
-          <li><a href="/message" class="nav-link px-2 link-dark">Messages</a></li>
+          <li><a href="/messagerie" class="nav-link px-2 link-dark">Messages</a></li>
           <li><a href="/group" class="nav-link px-2 link-dark">Groupe</a></li>
         </ul>
 
