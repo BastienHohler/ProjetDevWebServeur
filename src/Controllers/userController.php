@@ -106,11 +106,13 @@ public function login($parsedBody)
         $this->em->flush();
         session_start();
         session_unset();
+        $_SESSION["header"] = "Location:http://localhost:8080/";
     }
 
     function signOut(){
       session_start();
       session_unset();
+      $_SESSION["header"] = "Location:http://localhost:8080/";
     }
 
 }

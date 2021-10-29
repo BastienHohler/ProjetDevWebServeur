@@ -803,3 +803,11 @@ input {
 .pending{
   text-align: right;
 }
+
+.applicant{
+  text-align: right;
+}
+
+.container{
+  padding: 1%;
+}

@@ -87,16 +87,27 @@ $app->post('/send', function (Request $request, Response $response, array $args)
 })->add(redirectMiddleware::class);
 
 $app->get('/deleteUser/{id}', function (Request $request, Response $response, array $args) {
-    $uc = new UserController($this->get(EntityManager::class));
-    $uc->deleteUser($args['id']);
-    return $response;
-});
+    session_start();
+    if(isset($_SESSION["userId"])){
+        if($_SESSION["userId"] == $args['id']){
+            $uc = new UserController($this->get(EntityManager::class));
+            $uc->deleteUser($args['id']);
+            return $response;
+        }else{ 
+            $_SESSION["header"] = "Location:http://localhost:8080/friend";
+            return $response;
+        }
+    }else{
+        $_SESSION["header"] = "Location:http://localhost:8080/friend";
+        return $response;
+    }
+})->add(redirectMiddleware::class);
 
 $app->get('/signOut', function (Request $request, Response $response, array $args) {
     $uc = new UserController($this->get(EntityManager::class));
     $uc->signOut();
     return $response;
-});
+})->add(redirectMiddleware::class);
 
 $app->get('/friend', function (Request $request, Response $response) {
     $view = Twig::fromRequest($request);
@@ -105,9 +116,29 @@ $app->get('/friend', function (Request $request, Response $response) {
         $uc = new FriendController($this->get(EntityManager::class));
         $listFriends = $uc->listFriends($_SESSION["userId"]);
         $listPending = $uc->pendingList($_SESSION["userId"]);
-        return $view->render($response, 'friends.php',['listFriends' => $listFriends, 'listPending' => $listPending, 'name' => $_SESSION["userName"], "id" => $_SESSION["userId"]]);
+        $listRequest = $uc->requestList($_SESSION["userId"]);
+        return $view->render($response, 'friends.php',['listFriends' => $listFriends, 'listPending' => $listPending, 'listRequest' => $listRequest, 'name' => $_SESSION["userName"], "id" => $_SESSION["userId"]]);
     }
 });
+
+$app->post('/friend', function (Request $request, Response $response) {
+    $uc = new FriendController($this->get(EntityManager::class));
+    $parsedBody = $request->getParsedBody();
+    $uc->createFriend($parsedBody);
+    return $response;
+})->add(redirectMiddleware::class);
+
+$app->get('/deleteFriend/{id}', function (Request $request, Response $response, array $args) {
+    session_start();
+    if(isset($_SESSION["userId"])){
+            $uc = new FriendController($this->get(EntityManager::class));
+            $uc->deleteFriend($args['id']);
+            return $response;
+    }else{ 
+        $_SESSION["header"] = "Location:http://localhost:8080/friend";
+        return $response;
+    }
+})->add(redirectMiddleware::class);
 
 $app->get('/deleteMessage/{id}', function (Request $request, Response $response, array $args) {
     $mc = new MessageController($this->get(EntityManager::class));
