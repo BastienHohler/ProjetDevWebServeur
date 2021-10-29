@@ -68,7 +68,6 @@ class MessageController
     }
 
     function getAll() {
-        session_start();
         $messages = $this->em->getRepository(Message::class)->findBy(['recipient' => $_SESSION["userId"]]);
         return $messages;
       }

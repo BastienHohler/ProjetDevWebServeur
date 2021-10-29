@@ -1,6 +1,6 @@
 {% include 'nav.php' %}
 <!-- Trigger the modal with a button -->
-<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+<div class="text-center"><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Add Friend</button></div>
   <div class="container">
     <div class="row">
       <div class="col border">
@@ -57,29 +57,20 @@
           <h4 class="modal-title">Add friend</h4>
         </div>
         <div class="modal-body">
-          <select class="selectpicker" name="selectFriend">
+          <form action="/friend" method="post">
+          <select class="form-select" name="id_friend">
             {% for nonFriend in nonFriendsList %}
-              <option value="{{nonFriend.id}}">{{nonFriend.prenom}} {{nonFriend.nom}}</option>
+              <option value="{{nonFriend.id_user}}">{{nonFriend.prenom}} {{nonFriend.nom}}</option>
               {% endfor %}
           </select>
-          <select class="selectpicker">
-  <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
-  <option data-tokens="mustard">Burger, Shake and a Smile</option>
-  <option data-tokens="frosting">Sugar, Spice and all things nice</option>
-</select>
-
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary btn-sm">Add</button>
+          </form>
         </div>
       </div>
     </div>
   </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
   </body>
-  <script type="text/javascript">
-  $(document).ready(function() {
- $('.selectpicker').selectpicker();
-});
-  </script>
 </html>

@@ -32,7 +32,9 @@ $app->get('/signUp', function ($request, $response) {
     session_start();
     if(isset($_SESSION["userName"])){
         return $view->render($response, 'index.php',['name' => $_SESSION["userName"]]);
-    }return $view->render($response, 'signUp.php',['messageError' => $_SESSION["messageError"]]);
+    }else{
+        return $view->render($response, 'signUp.php',['messageError' => $_SESSION["messageError"]]);
+    }
 });
 
 $app->get('/signIn', function ($request, $response) {
@@ -40,9 +42,11 @@ $app->get('/signIn', function ($request, $response) {
     session_start();
     if(isset($_SESSION["userName"])){
         return $view->render($response, 'index.php',['name' => $_SESSION["userName"]]);
-    }else if(isset($_SESSION["messageError"])){
-     return $view->render($response, 'signIn.php',['messageError' => $_SESSION["messageError"]]);
-    }else return $view->render($response, 'signIn.php');
+    }else if(isset($_SESSION["messageErrorSignin"])){
+     return $view->render($response, 'signIn.php',['messageError' => $_SESSION["messageErrorSignin"]]);
+    }else{
+        return $view->render($response, 'signIn.php');
+    }
 });
 
 $app->post('/user', function (Request $request, Response $response, array $args) use ($app) {
@@ -69,7 +73,11 @@ $app->get('/messagerie/new', function (Request $request, Response $response) {
     if(isset($_SESSION["userName"])){
         $mc = new MessageController($this->get(EntityManager::class));
         $messages = $mc->getAll();
-        return $view->render($response, 'newMessage.php',['messageSuccess' => $_SESSION['messageSuccess'],'messageError' => $_SESSION["messageError"]]);
+        if(isset($_SESSION["messageSuccess"])){
+            return $view->render($response, 'newMessage.php',['messageSuccess' => $_SESSION['messageSuccess'],'messageError' => $_SESSION["messageError"]]);
+        }else{
+            return $view->render($response, 'newMessage.php',['messageError' => $_SESSION["messageError"]]);
+        }
     }else return $view->render($response, 'signIn.php', ['messageError' => 'Vous devez être connecté']);
 });
 

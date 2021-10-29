@@ -24,6 +24,7 @@ class FriendController
     public function createFriend($parsedBody) {
         $friend = new Friend();
         session_start();
+        print_r($parsedBody['id_friend']);
         $friend->setUser($this->em->find('User',$_SESSION["userId"]));
         $friend->setFriend($this->em->find('User',$parsedBody['id_friend']));
         $this->em->persist($friend);
