@@ -811,3 +811,7 @@ input {
 .container{
   padding: 1%;
 }
+
+.modal-backdrop{
+  opacity: 0.4;
+}

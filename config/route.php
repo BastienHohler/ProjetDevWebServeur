@@ -55,7 +55,7 @@ $app->post('/user', function (Request $request, Response $response, array $args)
 $app->get('/messagerie', function (Request $request, Response $response) {
     $view = Twig::fromRequest($request);
     session_start();
-    
+
     if(isset($_SESSION["userName"])){
         $mc = new MessageController($this->get(EntityManager::class));
         $messages = $mc->getAll();
@@ -95,7 +95,7 @@ $app->get('/deleteUser/{id}', function (Request $request, Response $response, ar
             $uc = new UserController($this->get(EntityManager::class));
             $uc->deleteUser($args['id']);
             return $response;
-        }else{ 
+        }else{
             $_SESSION["header"] = "Location:http://localhost:8080/friend";
             return $response;
         }
@@ -119,7 +119,8 @@ $app->get('/friend', function (Request $request, Response $response) {
         $listFriends = $uc->listFriends($_SESSION["userId"]);
         $listPending = $uc->pendingList($_SESSION["userId"]);
         $listRequest = $uc->requestList($_SESSION["userId"]);
-        return $view->render($response, 'friends.php',['listFriends' => $listFriends, 'listPending' => $listPending, 'listRequest' => $listRequest, 'name' => $_SESSION["userName"], "id" => $_SESSION["userId"]]);
+        $nonFriendsList = $uc->nonFriendsList($_SESSION["userId"]);
+        return $view->render($response, 'friends.php',['listFriends' => $listFriends, 'listPending' => $listPending, 'listRequest' => $listRequest, 'nonFriendsList' => $nonFriendsList, 'name' => $_SESSION["userName"], "id" => $_SESSION["userId"]]);
     }
 });
 
@@ -136,7 +137,7 @@ $app->get('/deleteFriend/{id}', function (Request $request, Response $response, 
             $uc = new FriendController($this->get(EntityManager::class));
             $uc->deleteFriend($args['id']);
             return $response;
-    }else{ 
+    }else{
         $_SESSION["header"] = "Location:http://localhost:8080/friend";
         return $response;
     }
@@ -146,4 +147,4 @@ $app->get('/deleteMessage/{id}', function (Request $request, Response $response,
     $mc = new MessageController($this->get(EntityManager::class));
     $mc->deleteMessage($args['id']);
     return $response;
-});
+})->add(redirectMiddleware::class);

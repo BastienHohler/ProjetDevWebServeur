@@ -9,6 +9,7 @@ use Nyholm\Psr7;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Doctrine\DBAL\createQueryBuilder;
 
 require_once __DIR__ . '/../Model/User.php';
 require_once __DIR__ . '/../Model/Friend.php';
@@ -54,6 +55,18 @@ class FriendController
             if($this->em->getRepository(Friend::class)->findOneBy(['user' => $friend, 'friend' => $value->getUser()])){
                 array_push($list,["prenom" => $friend->getPrenom(), "nom" => $friend->getNom(), "id_friend" => $value->getIdFriend()]);
             }
+        }
+        return $list;
+    }
+
+    function nonFriendsList($id){
+        $user = $this->em->find('User', $id);
+        $userList = $this->em->getRepository(User::class)->findAll();
+        $list = array();
+        foreach($userList as $value){
+          if(($this->em->getRepository(Friend::class)->findOneBy(['user' => $user, 'friend' => $value])) == null && ($this->em->getRepository(Friend::class)->findOneBy(['friend' => $user, 'user' => $value])) == null && $value != $user){
+            array_push($list,["prenom" => $value->getPrenom(), "nom" => $value->getNom(), "id_user" => $value->getId()]);
+          }
         }
         return $list;
     }
