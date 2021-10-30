@@ -2,6 +2,8 @@
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+require_once __DIR__ . '/../Model/Board.php';
+
 /**
  * Option
  * @ORM\Entity @ORM\Table(name="groups")

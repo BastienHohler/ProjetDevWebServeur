@@ -53,6 +53,16 @@ class User
      */
     private $etat;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Adresse")
+     */
+    private $address;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Group")
+     * @var Group[] An ArrayCollection of Group objects.
+     */
+    private $groups;
 
 
     public function getId() {
@@ -60,6 +70,14 @@ class User
     }
     public function setId( $id ) {
         $this->id = $id;
+    }
+
+    public function getGroups() {
+        return $this->groups;
+    }
+
+    public function addGroup($group) {
+        $this->groups[] = $group;
     }
 
     public function getNom() {

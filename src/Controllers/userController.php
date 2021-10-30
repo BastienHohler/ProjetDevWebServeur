@@ -9,6 +9,7 @@ use Nyholm\Psr7;
 
 require_once __DIR__ . '/../Model/User.php';
 require_once __DIR__ . '/../Model/Adresse.php';
+require_once __DIR__ . '/../Model/Group.php';
 
 
 class UserController

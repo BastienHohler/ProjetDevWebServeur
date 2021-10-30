@@ -67,9 +67,8 @@ class MessageController
       $this->em->flush();
     }
 
-    function getAll() {
-        session_start();
-        $messages = $this->em->getRepository(Message::class)->findBy(['recipient' => $_SESSION["userId"]]);
+    function getAll($id_user) {
+        $messages = $this->em->getRepository(Message::class)->findBy(['recipient' => $id_user]);
         return $messages;
       }
 

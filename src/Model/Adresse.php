@@ -19,12 +19,6 @@ class Adresse
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="User", mappedBy="adresse")
-     * @var User[] An ArrayCollection of User objects.
-     */
-     private $listUsers;
-
-    /**
      * @ORM\Column(name="rue", type="string")
      */
     private $rue;

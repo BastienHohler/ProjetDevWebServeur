@@ -787,13 +787,13 @@ input {
   color: green;
 }
 
-.msg_open{
+.msg_content{
   text-decoration: none;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 300px;
+  max-width: 500px;
 }
 
 .friends{
@@ -810,4 +810,9 @@ input {
 
 .container{
   padding: 1%;
+}
+
+.dual {
+  display: flex;
+  justify-content: space-between;
 }
