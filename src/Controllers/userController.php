@@ -81,11 +81,11 @@ public function login($parsedBody)
     if ($parsedBody['login'] != "" && $parsedBody['password'] != "") {
         $user = $this->em->getRepository(User::class)->findOneBy(['login' => $parsedBody['login']]);
         if ($user == null) {
-            $_SESSION["messageError"] = "Cet utilisateur est introuvable.";
+            $_SESSION["messageErrorSignin"] = "Cet utilisateur est introuvable.";
             $_SESSION["header"] = "Location:http://localhost:8080/signIn";
         }
         else if (!password_verify($parsedBody['password'], $user->getPassword())) {
-            $_SESSION["messageError"] = "Mot de passe incorrect.";
+            $_SESSION["messageErrorSignin"] = "Mot de passe incorrect.";
             $_SESSION["header"] = "Location:http://localhost:8080/signIn";
         }
         else {
@@ -94,7 +94,7 @@ public function login($parsedBody)
             $_SESSION["header"] = "Location:http://localhost:8080/";
         }
     } else {
-        $_SESSION["messageError"] = "Veuillez remplir tous les champs !";
+        $_SESSION["messageErrorSignin"] = "Veuillez remplir tous les champs !";
         $_SESSION["header"] = "Location:http://localhost:8080/signIn";
     }
 }

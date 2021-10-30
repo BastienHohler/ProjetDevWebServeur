@@ -816,3 +816,12 @@ input {
   display: flex;
   justify-content: space-between;
 }
+
+.modal-backdrop{
+  opacity: 0.4;
+}
+
+#map{
+  width: 70vw;
+  height: 80vh;
+}

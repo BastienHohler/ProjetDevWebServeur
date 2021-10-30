@@ -1,45 +1,93 @@
-<!DOCTYPE html>
-<html lang="fr" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="./css/main.css" rel="stylesheet" media="all">
-    <title></title>
-  </head>
-  <body>
+{% include 'nav.php' %}
+<div class="d-flex justify-content-center align-middle" style="height:100vh;">
+<div id="map">
+	    <!-- Ici s'affichera la carte -->
+	</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
-  <header class="p-3 mb-3 border-bottom">
-    <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
-          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
-        </a>
+<script>
+function geoFindMe() {
 
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="/friend" class="nav-link px-2 link-dark">Friends</a></li>
-          <li><a href="/messagerie" class="nav-link px-2 link-dark">Messages</a></li>
-          <li><a href="/group" class="nav-link px-2 link-dark">Groupe</a></li>
-        </ul>
+const status = document.querySelector('#status');
+const mapLink = document.querySelector('#map-link');
 
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-          <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-        </form>
+mapLink.href = '';
+mapLink.textContent = '';
 
-        <div class="dropdown text-end" id="dropdown">
-          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false" >
-            <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
-          </a>
-          <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><a class="dropdown-item" href="/deleteUser/{{id}}">Delete account</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/signOut">Sign out</a></li>
-          </ul>
-        </div>
-        <p style="margin-left: 15px;">{{name}}</p>
-      </div>
-    </div>
-  </header>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+function success(position) {
+  const latitude  = position.coords.latitude;
+  const longitude = position.coords.longitude;
+
+  status.textContent = '';
+  mapLink.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
+  mapLink.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;
+}
+
+function error() {
+  status.textContent = 'Unable to retrieve your location';
+}
+
+if (!navigator.geolocation) {
+  status.textContent = 'Geolocation is not supported by your browser';
+} else {
+  status.textContent = 'Locating…';
+  navigator.geolocation.getCurrentPosition(success, error);
+}
+
+}
+
+document.querySelector('#find-me').addEventListener('click', geoFindMe);
+    </script>
+ <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
+	<script type="text/javascript">
+  function coordonnee($address){
+    $.ajax({
+    url: 'http://api.positionstack.com/v1/forward',
+    data: {
+      access_key: 'c600e0b8cf0213139ff1b36a17ec62b3',
+      query: $address,
+      limit: 1
+    }
+  }).done(function(data) {
+    console.log(data.data[0].latitude)
+  });
+  }
+    function success(position) {
+      const latitude  = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      var macarte = null;
+      window.onload = function(){
+		  initMap(); 
+            };
+            
+       // Fonction d'initialisation de la carte
+       function initMap() {
+           // Créer l'objet "macarte" et l'insèrer dans l'élément HTML qui a l'ID "map"
+           macarte = L.map('map').setView([latitude, longitude], 16);
+           // Leaflet ne récupère pas les cartes (tiles) sur un serveur par défaut. Nous devons lui préciser où nous souhaitons les récupérer. Ici, openstreetmap.fr
+           L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+               // Il est toujours bien de laisser le lien vers la source des données
+               attribution: 'données © <a href="//osm.org/copyright">OpenStreetMap</a>/ODbL - rendu <a href="//openstreetmap.fr">OSM France</a>',
+               minZoom: 10,
+               maxZoom: 20
+           }).addTo(macarte);
+           var marker = L.marker([latitude, longitude]).addTo(macarte);
+            }
+
+      status.textContent = '';
+    }
+
+    function error() {
+      status.textContent = 'Unable to retrieve your location';
+    }
+
+    if (!navigator.geolocation) {
+      status.textContent = 'Geolocation is not supported by your browser';
+    } else {
+      status.textContent = 'Locating…';
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+        </script>
   </body>
 </html>

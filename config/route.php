@@ -33,7 +33,9 @@ $app->get('/signUp', function ($request, $response) {
     session_start();
     if(isset($_SESSION["userName"])){
         return $view->render($response, 'index.php',['name' => $_SESSION["userName"]]);
-    }return $view->render($response, 'signUp.php',['messageError' => $_SESSION["messageError"]]);
+    }else{
+        return $view->render($response, 'signUp.php',['messageError' => $_SESSION["messageError"]]);
+    }
 });
 
 $app->get('/signIn', function ($request, $response) {
@@ -41,7 +43,11 @@ $app->get('/signIn', function ($request, $response) {
     session_start();
     if(isset($_SESSION["userName"])){
         return $view->render($response, 'index.php',['name' => $_SESSION["userName"]]);
-    }else return $view->render($response, 'signIn.php',['messageError' => $_SESSION["messageError"]]);
+    }else if(isset($_SESSION["messageErrorSignin"])){
+     return $view->render($response, 'signIn.php',['messageError' => $_SESSION["messageErrorSignin"]]);
+    }else{
+        return $view->render($response, 'signIn.php');
+    }
 });
 
 $app->post('/user', function (Request $request, Response $response, array $args) use ($app) {
@@ -54,7 +60,7 @@ $app->post('/user', function (Request $request, Response $response, array $args)
 $app->get('/messagerie', function (Request $request, Response $response) {
     $view = Twig::fromRequest($request);
     session_start();
-    
+
     if(isset($_SESSION["userName"])){
         $mc = new MessageController($this->get(EntityManager::class));
         $messages = $mc->getAll();
@@ -67,8 +73,12 @@ $app->get('/messagerie/new', function (Request $request, Response $response) {
     session_start();
     if(isset($_SESSION["userName"])){
         $mc = new MessageController($this->get(EntityManager::class));
-        $messages = $mc->getAll($_SESSION["userId"]);
-        return $view->render($response, 'newMessage.php',['messageSuccess' => $_SESSION['messageSuccess'],'messageError' => $_SESSION["messageError"]]);
+        $messages = $mc->getAll();
+        if(isset($_SESSION["messageSuccess"])){
+            return $view->render($response, 'newMessage.php',['messageSuccess' => $_SESSION['messageSuccess'],'messageError' => $_SESSION["messageError"]]);
+        }else{
+            return $view->render($response, 'newMessage.php',['messageError' => $_SESSION["messageError"]]);
+        }
     }else return $view->render($response, 'signIn.php', ['messageError' => 'Vous devez être connecté']);
 });
 
@@ -94,7 +104,7 @@ $app->get('/deleteUser/{id}', function (Request $request, Response $response, ar
             $uc = new UserController($this->get(EntityManager::class));
             $uc->deleteUser($args['id']);
             return $response;
-        }else{ 
+        }else{
             $_SESSION["header"] = "Location:http://localhost:8080/friend";
             return $response;
         }
@@ -118,7 +128,8 @@ $app->get('/friend', function (Request $request, Response $response) {
         $listFriends = $uc->listFriends($_SESSION["userId"]);
         $listPending = $uc->pendingList($_SESSION["userId"]);
         $listRequest = $uc->requestList($_SESSION["userId"]);
-        return $view->render($response, 'friends.php',['listFriends' => $listFriends, 'listPending' => $listPending, 'listRequest' => $listRequest, 'name' => $_SESSION["userName"], "id" => $_SESSION["userId"]]);
+        $nonFriendsList = $uc->nonFriendsList($_SESSION["userId"]);
+        return $view->render($response, 'friends.php',['listFriends' => $listFriends, 'listPending' => $listPending, 'listRequest' => $listRequest, 'nonFriendsList' => $nonFriendsList, 'name' => $_SESSION["userName"], "id" => $_SESSION["userId"]]);
     }
 });
 
@@ -148,7 +159,7 @@ $app->get('/deleteFriend/{id}', function (Request $request, Response $response, 
             $uc = new FriendController($this->get(EntityManager::class));
             $uc->deleteFriend($args['id']);
             return $response;
-    }else{ 
+    }else{
         $_SESSION["header"] = "Location:http://localhost:8080/friend";
         return $response;
     }
@@ -158,4 +169,4 @@ $app->get('/deleteMessage/{id}', function (Request $request, Response $response,
     $mc = new MessageController($this->get(EntityManager::class));
     $mc->deleteMessage($args['id']);
     return $response;
-});
+})->add(redirectMiddleware::class);
