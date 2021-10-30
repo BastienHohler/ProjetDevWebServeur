@@ -6,36 +6,43 @@
             <div class="card-heading">
                 <h2 class="title">Envoyer un message</h2>
             </div>
+            {% if friendsList==null %}
+            <p class="messageError"> Vous n'avez aucun ami ! Ajoutez-en dès maintenant dans l'onglet Friends.</p>
+            {% else %}
             <div class="card-body">
+
                 <form action="/send" method="post">
                     <div class="form-row m-b-55">
                         <div class="name"></div>
                         <div class="value">
-                            <div class="row row-space">
-                                <div class="col-2">
-                                    <div class="input-group-desc">
-                                        <input class="input--style-5" type="text" name="recipient">
-                                        <label class="label--desc">Destinataire (pseudo)</label>
-                                    </div>
-                                </div>
-                                <div class="col-2">
-                                    <div class="input-group-desc">
-                                        <input class="input--style-5" type="text" name="content">
-                                        <label class="label--desc">Contenu du message</label>
-                                    </div>
+                            <div class="modal-body">
+
+                                <select class="form-select" name="recipient">
+                                    {% for friend in friendsList %}
+                                    <option value="{{friend.id_friend}}">{{friend.prenom}} {{friend.nom}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <div class="input-group-desc">
+                                    <input class="input--style-5" type="text" name="content">
+                                    <label class="label--desc">Contenu du message</label>
                                 </div>
                             </div>
                         </div>
                     </div>
-                        <div style="margin-top:50px;margin-left:35%;">
-                            <button class="btn btn--radius-2 btn--red" type="submit">Envoyer</button>
-                        </div>
+                    <div style="margin-top:50px;margin-left:35%;">
+                        <button class="btn btn--radius-2 btn--red" type="submit">Envoyer</button>
+                    </div>
                 </form>
             </div>
+            {% endif %}
             <p class="messageError">{{messageError}}</p>
             <p class="messageSuccess">{{messageSuccess}}</p>
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
+
 </html>

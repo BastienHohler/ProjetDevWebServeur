@@ -64,7 +64,7 @@ $app->get('/messagerie', function (Request $request, Response $response) {
     if(isset($_SESSION["userName"])){
         $mc = new MessageController($this->get(EntityManager::class));
         $messages = $mc->getAll();
-        return $view->render($response, 'messagerie.php', ['messages' => $messages]);
+        return $view->render($response, 'messagerie.php', ['messages' => $messages, 'name'=>$_SESSION['userName']]);
     }else return $view->render($response, 'signIn.php', ['messageError' => 'Vous devez être connecté']);
 });
 
@@ -72,12 +72,12 @@ $app->get('/messagerie/new', function (Request $request, Response $response) {
     $view = Twig::fromRequest($request);
     session_start();
     if(isset($_SESSION["userName"])){
-        $mc = new MessageController($this->get(EntityManager::class));
-        $messages = $mc->getAll();
+        $fc = new FriendController($this->get(EntityManager::class));
+        $listFriends = $fc->listFriends($_SESSION["userId"]);
         if(isset($_SESSION["messageSuccess"])){
-            return $view->render($response, 'newMessage.php',['messageSuccess' => $_SESSION['messageSuccess'],'messageError' => $_SESSION["messageError"]]);
+            return $view->render($response, 'newMessage.php',['friendsList' => $listFriends, 'messageSuccess' => $_SESSION['messageSuccess'],'messageError' => $_SESSION["messageError"],'name'=>$_SESSION['userName']]);
         }else{
-            return $view->render($response, 'newMessage.php',['messageError' => $_SESSION["messageError"]]);
+            return $view->render($response, 'newMessage.php',['friendsList' => $listFriends, 'messageError' => $_SESSION["messageError"],'name'=>$_SESSION['userName']]);
         }
     }else return $view->render($response, 'signIn.php', ['messageError' => 'Vous devez être connecté']);
 });
@@ -130,7 +130,7 @@ $app->get('/friend', function (Request $request, Response $response) {
         $listRequest = $uc->requestList($_SESSION["userId"]);
         $nonFriendsList = $uc->nonFriendsList($_SESSION["userId"]);
         return $view->render($response, 'friends.php',['listFriends' => $listFriends, 'listPending' => $listPending, 'listRequest' => $listRequest, 'nonFriendsList' => $nonFriendsList, 'name' => $_SESSION["userName"], "id" => $_SESSION["userId"]]);
-    }
+    } else return $view->render($response, 'signIn.php', ['messageError' => 'Vous devez être connecté']);
 });
 
 $app->post('/friend', function (Request $request, Response $response) {
@@ -140,16 +140,16 @@ $app->post('/friend', function (Request $request, Response $response) {
     return $response;
 })->add(redirectMiddleware::class);
 
-$app->get('/group', function (Request $request, Response $response) {
+$app->get('/groups', function (Request $request, Response $response) {
     $view = Twig::fromRequest($request);
     session_start();
     
     if(isset($_SESSION["userName"])){
         $uc = new UserController($this->get(EntityManager::class));
-        $groups = $uc->getGroups();
+        $groupsUser = $uc->getGroups($_SESSION['userId']);
         $gc = new GroupController($this->get(EntityManager::class));
-        $messages = $mc->getAll();
-        return $view->render($response, 'group.php', ['messages' => $messages]);
+        $availableGrps = $gc->getAvailableGroups($_SESSION['userId']);
+        return $view->render($response, 'groups.php', ['grpsUser' => $groupsUser,'availableGrps' => $availableGrps,'name'=>$_SESSION['userName']]);
     }else return $view->render($response, 'signIn.php', ['messageError' => 'Vous devez être connecté']);
 });
 
@@ -161,6 +161,19 @@ $app->get('/deleteFriend/{id}', function (Request $request, Response $response, 
             return $response;
     }else{
         $_SESSION["header"] = "Location:http://localhost:8080/friend";
+        return $response;
+    }
+})->add(redirectMiddleware::class);
+
+$app->get('/groups/join/{id}', function (Request $request, Response $response, array $args) {
+    session_start();
+    if(isset($_SESSION["userId"])){
+            $gc = new GroupController($this->get(EntityManager::class));
+            $gc->addUserGroup($args['id'],$_SESSION['userId']);
+            $_SESSION["header"] = "Location:http://localhost:8080/groups";
+            return $response;
+    }else{
+        $_SESSION["header"] = "Location:http://localhost:8080/signIn";
         return $response;
     }
 })->add(redirectMiddleware::class);

@@ -116,4 +116,8 @@ public function login($parsedBody)
       $_SESSION["header"] = "Location:http://localhost:8080/";
     }
 
+    public function getGroups($id) {
+        return $this->em->find('User',$id)->getGroups();
+    }
+
 }
