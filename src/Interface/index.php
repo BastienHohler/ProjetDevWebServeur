@@ -1,4 +1,5 @@
 {% include 'nav.php' %}
+<p class="text-center"><img src="https://unpkg.com/leaflet@1.3.1/dist/images/marker-icon.png" alt=""> personnes ayant le covid <img src="http://maps.google.com/mapfiles/ms/icons/red-dot.png" alt="">Moi</p><br>
 <div class="d-flex justify-content-center align-middle" style="height:100vh;">
 <div id="map">
 	    <!-- Ici s'affichera la carte -->
