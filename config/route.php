@@ -56,6 +56,20 @@ $app->post('/user', function (Request $request, Response $response, array $args)
     return $response;
 })->add(redirectMiddleware::class);
 
+
+$app->post('/coord', function (Request $request, Response $response) {
+    $uc = new UserController($this->get(EntityManager::class));
+    $parsedBody = $request->getParsedBody();
+    $uc->setCoord($parsedBody["latitude"], $parsedBody["longitude"]);
+    return $response;
+});
+
+$app->get('/coord', function (Request $request, Response $response) {
+    $uc = new UserController($this->get(EntityManager::class));
+    $response->getBody()->write(json_encode($uc->userCoord()));
+    return $response;
+});
+
 $app->get('/messagerie', function (Request $request, Response $response) {
     $view = Twig::fromRequest($request);
     session_start();
