@@ -28,11 +28,20 @@ class MessageController
     $_SESSION["messageSuccess"] = "";
     $message = new Message();
     $sender = $this->em->find('User', $_SESSION['userId']);
-    if (isset($parsedBody['recipient'])) {
+
+    if (isset($parsedBody['recipient']) && $parsedBody['recipient'] != null) {
+      echo $parsedBody['recipient'];
       $recipient = $this->em->find('User', $parsedBody['recipient']);
       $message->setSender($sender);
       $message->setRecipient($recipient);
       $message->setContents($parsedBody['content']);
+      $this->em->persist($message);
+      $this->em->flush();
+    } else if (isset($parsedBody['group'])) {
+      $grp = $this->em->find('Group', $parsedBody['group']);
+      $message->setSender($sender);
+      $message->setContents($parsedBody['content']);
+      $message->setGroup($grp);
       $this->em->persist($message);
       $this->em->flush();
     } else {
@@ -58,18 +67,32 @@ class MessageController
   {
     session_start();
     $message = $this->em->find('Message', $id);
-
-    if ($_SESSION["userId"] == $message->getRecipient()->getId()) {
-      $this->em->remove($message);
-      $this->em->flush();
+    if ($message->getGroup() != null) {
+      if ($_SESSION["userId"] == $message->getSender()->getId()) {
+        $this->em->remove($message);
+        $this->em->flush();
+      }
+      
+      $_SESSION["header"] = "Location:http://localhost:8080/messagerie/group/".$message->getGroup()->getIdGroup();
+    } else {
+      if ($_SESSION["userId"] == $message->getRecipient()->getId()) {
+        $this->em->remove($message);
+        $this->em->flush();
+        
+      }
+      $_SESSION["header"] = "Location:http://localhost:8080/messagerie";
     }
-    $_SESSION["header"] = "Location:http://localhost:8080/messagerie";
   }
 
   function getAll()
   {
     $messages = $this->em->getRepository(Message::class)->findBy(['recipient' => $_SESSION["userId"]]);
     return $messages;
+  }
+
+  function getAllGroup($id_group)
+  {
+    return $this->em->getRepository(Message::class)->findBy(['group' => $id_group]);
   }
 
   public function __construct(EntityManager $em)

@@ -59,11 +59,17 @@ class User
     private $address;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Group")
-     * @var Group[] An ArrayCollection of Group objects.
-     */
-    private $groups;
+    * @ORM\OneToMany(targetEntity=GroupParticipant::class, mappedBy="user")
+    * @ORM\JoinColumn(onDelete="CASCADE") 
+    */
+    private $groupParticipants;
 
+    private $listGroups;
+
+    public function __construct()
+    {
+        $this->listGroups = array();
+    }
 
     public function getId() {
         return $this->id;
@@ -72,12 +78,17 @@ class User
         $this->id = $id;
     }
 
-    public function getGroups() {
-        return $this->groups;
+    public function getGroups()
+    {
+        $groups = array();
+        foreach ($this->groupParticipants as $gp) {
+            $groups[] = $gp->getGroup();
+        }
+        return $groups;
     }
 
     public function addGroup($group) {
-        $this->groups[] = $group;
+        $this->listGroups[] = $group;
     }
 
     public function getNom() {

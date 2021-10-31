@@ -2,6 +2,7 @@
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+
 require_once __DIR__ . '/../Model/Board.php';
 
 /**
@@ -20,12 +21,6 @@ class Group
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @var User[] An ArrayCollection of User objects.
-     */
-    private $listUsers;
-
-    /**
      * @ORM\Column(name="name", type="string")
      */
     private $name;
@@ -33,44 +28,55 @@ class Group
     /**
      * @ORM\ManyToOne(targetEntity="Board")
      * @var Board An Board of Board objects.
+     * @ORM\JoinColumn(onDelete="CASCADE") 
      */
     private $board;
 
+    /**
+     * @ORM\OneToMany(targetEntity=GroupParticipant::class, mappedBy="group")
+     * @ORM\JoinColumn(onDelete="CASCADE") 
+     */
+    private $groupParticipants;
 
-    public function getIdGroup() {
+
+    public function getIdGroup()
+    {
         return $this->id;
     }
-    public function setIdGroup( $id ) {
+    public function setIdGroup($id)
+    {
         $this->id = $id;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
-    public function setName( $name ) {
+    public function setName($name)
+    {
         $this->name = $name;
     }
 
-    public function getBoard() {
+    public function getBoard()
+    {
         return $this->board;
     }
-    public function setBoard( Board $board ) {
+    public function setBoard(Board $board)
+    {
         $this->board = $board;
     }
 
     public function __construct()
     {
-        $this->listUsers = new ArrayCollection();
+        $this->groupParticipants = array();
     }
 
-    public function addUser(User $user)
+    public function getUsers()
     {
-        $this->listUsers[] = $user;
+        $users = array();
+        foreach ($this->groupParticipants as $gp) {
+            $users[] = $gp->getUser();
+        }
+        return $users;
     }
-
-    public function getUser()
-    {
-        return $this->listUsers;
-    }
-
 }

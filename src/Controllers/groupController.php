@@ -14,6 +14,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 require_once __DIR__ . '/../Model/User.php';
 require_once __DIR__ . '/../Model/Group.php';
 require_once __DIR__ . '/../Model/Board.php';
+require_once __DIR__ . '/../Model/GroupParticipant.php';
 
 class GroupController
 {
@@ -22,10 +23,14 @@ class GroupController
    */
   private $em;
 
-  public function createGroup($parsedBody)
+  public function createGroup($parsedBody, $id_user)
   {
     $group = new Group();
-    $group->setName($parsedBody['nameGroup']);
+    $group->setName($parsedBody['grp_name']);
+    $gp = new GroupParticipant();
+    $gp->setUser($this->em->find('User', $id_user));
+    $gp->setGroup($group);
+    $this->em->persist($gp);
     $this->em->persist($group);
     $this->em->flush();
 
@@ -41,7 +46,10 @@ class GroupController
   function deleteGroup($id)
   {
     $group = $this->em->find('Group', $id);
-
+    $gps = $this->em->getRepository(GroupParticipant::class)->findBy(['group' => $id]);
+    foreach ($gps as $gp) {
+      $this->em->remove($gp);
+    }
     $this->em->remove($group);
     $this->em->flush();
   }
@@ -49,12 +57,27 @@ class GroupController
   function addUserGroup($id_group, $id_user)
   {
     $group = $this->em->find('Group', $id_group);
-    $group->addUser($this->em->find('User', $id_user));
-    $this->em->persist($group);
+    $user = $this->em->find('User', $id_user);
+    $gp = new GroupParticipant();
+    $gp->setUser($user);
+    $gp->setGroup($group);
+    $this->em->persist($gp);
     $this->em->flush();
   }
 
-  function getAll() {
+  function removeUserGroup($id_group, $id_user) {
+    $group = $this->em->find('Group', $id_group);
+    $user = $this->em->find('User', $id_user);
+    $gp = $this->em->getRepository(GroupParticipant::class)->findOneBy(['group' => $group,'user'=>$user]);
+    $this->em->remove($gp);
+    $this->em->flush();
+  }
+
+  function findById($id) {
+    return $this->em->find('Group',$id);
+  }
+  function getAll()
+  {
     return $this->em->getRepository(Group::class)->findAll();
   }
 
@@ -66,18 +89,18 @@ class GroupController
   public function getAvailableGroups($id)
   {
     $groups = $this->getAll();
-    $availableGrps = [];
-    $user = $this->em->find('User',$id);
+    $availableGrps = array();
+    $userGrp = $this->em->find('User', $id)->getGroups();
     foreach ($groups as $grp) {
-      if (!in_array($user,$grp->getUsers()))
-      {
+      if (!in_array($grp, $userGrp)) {
         $availableGrps[] = $grp;
       }
     }
     return $availableGrps;
   }
 
-  public function getUsers($id_group) {
-
+  public function getUsers($id_group)
+  {
+    return $this->em->getRepository(GroupParticipant::class)->findBy(['group' => $id_group]);
   }
 }

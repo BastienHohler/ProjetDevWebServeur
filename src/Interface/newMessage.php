@@ -6,8 +6,8 @@
             <div class="card-heading">
                 <h2 class="title">Envoyer un message</h2>
             </div>
-            {% if friendsList==null %}
-            <p class="messageError"> Vous n'avez aucun ami ! Ajoutez-en dès maintenant dans l'onglet Friends.</p>
+            {% if friendsList==null and groups == null %}
+            <p class="messageError">Ajoutez des amis ou rejoignez un groupe</p>
             {% else %}
             <div class="card-body">
 
@@ -16,12 +16,22 @@
                         <div class="name"></div>
                         <div class="value">
                             <div class="modal-body">
-
+                                {% if friendsList != null %}
                                 <select class="form-select" name="recipient">
+                                <option disabled selected value> Choisir un ami </option>
                                     {% for friend in friendsList %}
-                                    <option value="{{friend.id_friend}}">{{friend.prenom}} {{friend.nom}}</option>
+                                    <option value="{{friend.id_user_friend}}">{{friend.prenom}} {{friend.nom}}</option>
                                     {% endfor %}
                                 </select>
+                                {% endif %}
+                                {% if groups != null %}
+                                <select class="form-select" name="group">
+                                <option disabled selected value> Choisir un groupe </option>
+                                {% for grp in groups %}
+                                    <option value="{{grp.getIdGroup()}}">{{grp.getName()}}</option>
+                                    {% endfor %}
+                                </select>
+                                {% endif %}
                             </div>
                             <div>
                                 <div class="input-group-desc">

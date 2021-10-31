@@ -1,13 +1,20 @@
 {% include 'nav.php' %}
+
+{% if group != null %}
+<div class="text-center fontblack"> 
+  <h3>Messagerie du groupe '{{group.getName()}}'</h3>
+</div>
+<br>
+{% endif %}
 <div class="title">
-  <a href='messagerie/new'>
+  <a href='/messagerie/new'>
     <button class="btn btn--green">Envoyer un message</button>
   </a>
 </div>
 <br>
 {% if messages==null %}
 <div class='info'>
-  <p> Vous n'avez aucun nouveau message. </p>
+  <p> Aucun message. </p>
 </div>
 {% else %}
 <div class="container">
@@ -26,13 +33,12 @@
   {% for msg in messages %}
   <div class="row">
     <div class="col-3 border">
-      <p class="msg_sender">{{msg.getSender().getFullName()}}</p>
+      <p class="msg_sender text-center">{{msg.getSender().getFullName()}}</p>
     </div>
-    <div class="dual border col">
+    <div class="border col">
       <div>
-        <p class="msg_content">{{msg.getContents()}}</p>
+        <p class="">{{msg.getContents()}}</p>
       </div>
-      <div><a href="/messagerie/{{msg.getIdMessage()}}"> Lire </a> </div>
     </div>
     <div class="col-1 ">
       <p class="msg_del"><a href="/deleteMessage/{{msg.getIdMessage()}}"><i class="fas fa-trash-alt"></i></a></p>

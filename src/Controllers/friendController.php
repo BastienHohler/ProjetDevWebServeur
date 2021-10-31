@@ -54,7 +54,7 @@ class FriendController
         foreach($listFriends as $value){
             $friend = $value->getFriend();
             if($this->em->getRepository(Friend::class)->findOneBy(['user' => $friend, 'friend' => $value->getUser()])){
-                array_push($list,["prenom" => $friend->getPrenom(), "nom" => $friend->getNom(), "id_friend" => $friend->getId()]);
+                array_push($list,["prenom" => $friend->getPrenom(), "nom" => $friend->getNom(), "id_friend" => $value->getIdFriend(), "id_user_friend" => $friend->getId()]);
             }
         }
         return $list;

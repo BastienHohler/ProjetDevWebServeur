@@ -20,20 +20,23 @@ class Message
     /**
      * @ORM\ManyToOne(targetEntity="User")
      * @var User
+     * @ORM\JoinColumn(onDelete="CASCADE") 
      */
      private $sender;
 
      /**
       * @ORM\ManyToOne(targetEntity="User")
       * @var User
+      * @ORM\JoinColumn(onDelete="CASCADE") 
       */
       private $recipient;
 
-      /*/**
+      /**
        * @ORM\ManyToOne(targetEntity="Group")
        * @var Group
+       * @ORM\JoinColumn(onDelete="CASCADE") 
        */
-       //private $group;
+    private $group;
 
     /**
      * @ORM\Column(name="contents", type="string")
@@ -46,6 +49,14 @@ class Message
      */
      private $listFiles;
 
+
+    public function setGroup($group) {
+        $this->group = $group;
+    }
+
+    public function getGroup() {
+        return $this->group;
+    }
 
     public function getIdMessage() {
         return $this->id;
