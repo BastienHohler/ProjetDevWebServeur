@@ -99,6 +99,28 @@ public function login($parsedBody)
     }
 }
 
+public function setCoord($latitude,$longitude)
+{
+    session_start();
+    $user = $this->em->find('User', $_SESSION["userId"]);
+    $user->setLatitude($latitude);
+    $user->setLongitude($longitude);
+    $this->em->flush();
+}
+
+public function userCoord()
+{
+    session_start();
+    $userList = $this->em->getRepository(User::class)->findAll();
+    $list = array();
+        foreach($userList as $user){
+          if(($user != $this->em->find('User', $_SESSION["userId"])) && ($user->getEtat() == "covided")){
+            array_push($list,["prenom" => $user->getPrenom(), "nom" => $user->getNom(), "anonyme" => $user->getAnonyme(), "latitude" => $user->getLatitude(),"longitude" => $user->getLongitude()]);
+          }
+        }
+    return $list;
+}
+
     public function deleteUser($id)
     {
         $user = $this->em->find('User', $id);

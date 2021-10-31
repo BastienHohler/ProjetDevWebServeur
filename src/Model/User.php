@@ -64,7 +64,16 @@ class User
     */
     private $groupParticipants;
 
-    private $listGroups;
+    /**
+     * @ORM\Column(name="latitude", type="float" , nullable=false)
+     */
+    private $latitude;
+
+    /**
+     * @ORM\Column(name="longitude", type="float", nullable=false)
+     */
+    private $longitude;
+
 
     public function __construct()
     {
@@ -143,6 +152,20 @@ class User
     }
     public function setEtat( $etat ) {
         $this->etat = $etat;
+    }
+
+    public function getLatitude() {
+        return $this->latitude;
+    }
+    public function setLatitude( $latitude ) {
+        $this->latitude = $latitude;
+    }
+
+    public function getLongitude() {
+        return $this->longitude;
+    }
+    public function setLongitude( $longitude ) {
+        $this->longitude = $longitude;
     }
 
     public function setAdresse(Adresse $adresse)
