@@ -21,16 +21,7 @@
     }).done(function(data) {
       console.log("ok")
     });
-    /*$.ajax({
-      method: "GET",
-      url: 'http://localhost:8080/coord',
-      dataType: "json"
-    }).done(function(data) {
-      console.log(data)
-    });*/
-    $.get( "http://localhost:8080/coord", function( data ) {
-      console.log(JSON.parse(data)[0].prenom);
-    });
+
       var macarte = null;
       window.onload = function(){
 		  initMap(); 
@@ -48,7 +39,11 @@
                maxZoom: 20
            }).addTo(macarte);
            var marker = L.marker([latitude, longitude]).addTo(macarte);
-            }
+           $.get( "http://localhost:8080/coord", function( data ) {
+             var response = JSON.parse(data)
+            console.log(JSON.parse(data)[0].prenom);
+            
+            });
 
       status.textContent = '';
     }
