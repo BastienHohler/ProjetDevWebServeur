@@ -81,7 +81,7 @@ class MessageController
       if ($_SESSION["userId"] == $message->getSender()->getId()) {
         $this->em->remove($message);
         $this->em->flush();
-        $_SESSION["header"] = "Location:http://localhost:8080/messagerie/new/".$message->getRecipient()->getId();
+        $_SESSION["header"] = "Location:http://localhost:8080/messagerie/msg/".$message->getRecipient()->getId();
       }
       
     }

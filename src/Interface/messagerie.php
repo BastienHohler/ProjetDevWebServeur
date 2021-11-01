@@ -8,7 +8,7 @@
 
 {% for frd in friends %}
 <div class="row">
-  <div class="title">
+  <div class="title chat">
     <a href='/messagerie/msg/{{frd.id_user_friend}}'>
       <button class="btn btn--green">Chat avec {{frd.prenom}} {{frd.nom}}</button>
     </a>

@@ -93,7 +93,7 @@ $app->get('/messagerie/msg/{id}', function (Request $request, Response $response
         $friend = $uc->findById($args['id']);
         $mc = new MessageController($this->get(EntityManager::class));
         $messages = $mc->getChat($_SESSION['userId'],$args['id']);
-        return $view->render($response, 'newMessage.php', ['frd'=>$friend,'msgs' => $messages, 'messageSuccess' => $_SESSION['messageSuccess'], 'messageError' => $_SESSION["messageError"], 'name' => $_SESSION['userName']]);
+        return $view->render($response, 'newMessage.php', ['frd'=>$friend,'msgs' => $messages, 'name' => $_SESSION['userName']]);
     } else return $view->render($response, 'signIn.php', ['messageError' => 'Vous devez être connecté']);
 });
 
@@ -105,7 +105,7 @@ $app->get('/messagerie/msggroup/{id}', function (Request $request, Response $res
     if (isset($_SESSION["userName"])) {
         $mc = new MessageController($this->get(EntityManager::class));
         $messages = $mc->getAllGroup($args['id']);
-        return $view->render($response, 'newMessage.php', ['grp'=>$group,'msgs' => $messages, 'messageSuccess' => $_SESSION['messageSuccess'], 'messageError' => $_SESSION["messageError"], 'name' => $_SESSION['userName'],'id' => $_SESSION['userId']]);
+        return $view->render($response, 'newMessage.php', ['grp'=>$group,'msgs' => $messages, 'name' => $_SESSION['userName'],'id' => $_SESSION['userId']]);
     } else return $view->render($response, 'signIn.php', ['messageError' => 'Vous devez être connecté']);
 });
 

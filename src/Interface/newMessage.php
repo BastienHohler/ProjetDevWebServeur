@@ -21,7 +21,7 @@
                 {% endfor %}
             </div>
             <div class="card-body">
-                <form action="/send/{{grp.getIdGroup()}}" method="post">
+                <form action="/send/{{frd.getId()}}" method="post">
                     <div class="form-row m-b-55">
                         <div class="name"></div>
                         <div class="value">
@@ -77,24 +77,6 @@
                 </form>
             </div>
             {% endif %}
-            <div class="card-body">
-                <form action="/send/{{grp.getIdGroup()}}" method="post">
-                    <div class="form-row m-b-55">
-                        <div class="name"></div>
-                        <div class="value">
-                            <div>
-                                <div class="input-group-desc">
-                                    <input class="input--style-5" type="text" name="content">
-                                    <label class="label--desc">Contenu du message</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="margin-top:50px;margin-left:35%;">
-                        <button class="btn btn--radius-2 btn--red" type="submit">Envoyer</button>
-                    </div>
-                </form>
-            </div>
             <p class="messageError">{{messageError}}</p>
             <p class="messageSuccess">{{messageSuccess}}</p>
         </div>

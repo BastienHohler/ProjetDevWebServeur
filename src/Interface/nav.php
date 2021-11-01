@@ -12,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.9.3/js/bootstrap-select.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin="" />
     <link href="/css/main.css" rel="stylesheet" media="all">
-    <title></title>
+    <title>Appli covid</title>
   </head>
 
   <body>
@@ -30,10 +30,6 @@
           <li><a href="/messagerie" class="nav-link px-2 link-dark">Messages</a></li>
           <li><a href="/groups" class="nav-link px-2 link-dark">Groupe</a></li>
         </ul>
-
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-          <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-        </form>
 
         <div class="dropdown text-end" id="dropdown">
           <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false" >
