@@ -30,11 +30,11 @@ class MessageController
     $sender = $this->em->find('User', $_SESSION['userId']);
 
     if (isset($parsedBody['recipient']) && $parsedBody['recipient'] != null) {
-      echo $parsedBody['recipient'];
       $recipient = $this->em->find('User', $parsedBody['recipient']);
       $message->setSender($sender);
       $message->setRecipient($recipient);
       $message->setContents($parsedBody['content']);
+      $_SESSION["header"] = "Location:http://localhost:8080/messagerie/msg/".$parsedBody['recipient'];
       $this->em->persist($message);
       $this->em->flush();
     } else if (isset($parsedBody['group'])) {
@@ -42,6 +42,7 @@ class MessageController
       $message->setSender($sender);
       $message->setContents($parsedBody['content']);
       $message->setGroup($grp);
+      $_SESSION["header"] = "Location:http://localhost:8080/messagerie/msggroup/".$parsedBody['group'];
       $this->em->persist($message);
       $this->em->flush();
     } else {
@@ -59,8 +60,10 @@ class MessageController
       $this->em->persist($file);
       $this->em->flush();
     }
-    $_SESSION["messageSuccess"] = "Message envoyé !";
-    $_SESSION["header"] = "Location:http://localhost:8080/messagerie/new";
+  }
+
+  function getChat($user_id,$friend_id) {
+    return $this->em->getRepository(Message::class)->findBy(['recipient'=>[$user_id,$friend_id],'sender'=>[$user_id,$friend_id]],['id'=>'ASC']);
   }
 
   function deleteMessage($id)
@@ -73,14 +76,14 @@ class MessageController
         $this->em->flush();
       }
       
-      $_SESSION["header"] = "Location:http://localhost:8080/messagerie/group/".$message->getGroup()->getIdGroup();
+      $_SESSION["header"] = "Location:http://localhost:8080/messagerie/msggroup/".$message->getGroup()->getIdGroup();
     } else {
-      if ($_SESSION["userId"] == $message->getRecipient()->getId()) {
+      if ($_SESSION["userId"] == $message->getSender()->getId()) {
         $this->em->remove($message);
         $this->em->flush();
-        
+        $_SESSION["header"] = "Location:http://localhost:8080/messagerie/new/".$message->getRecipient()->getId();
       }
-      $_SESSION["header"] = "Location:http://localhost:8080/messagerie";
+      
     }
   }
 

@@ -1,50 +1,21 @@
 {% include 'nav.php' %}
 
-{% if group != null %}
-<div class="text-center fontblack"> 
-  <h3>Messagerie du groupe '{{group.getName()}}'</h3>
-</div>
-<br>
-{% endif %}
-<div class="title">
-  <a href='/messagerie/new'>
-    <button class="btn btn--green">Envoyer un message</button>
-  </a>
-</div>
-<br>
-{% if messages==null %}
+{% if friends==null %}
 <div class='info'>
-  <p> Aucun message. </p>
+  <p> Ajoutez un ami pour discuter. </p>
 </div>
 {% else %}
-<div class="container">
-  <div class="row">
-    <div class="col-3 border">
-      <h3 class="text-center">Expéditeur</h3>
-    </div>
-    <div class="col border">
-      <h3 class="text-center">Contenu</h3>
-    </div>
-    <div class="col-1">
-      <p class="msg_open"></p>
-    </div>
-  </div>
 
-  {% for msg in messages %}
-  <div class="row">
-    <div class="col-3 border">
-      <p class="msg_sender text-center">{{msg.getSender().getFullName()}}</p>
-    </div>
-    <div class="border col">
-      <div>
-        <p class="">{{msg.getContents()}}</p>
-      </div>
-    </div>
-    <div class="col-1 ">
-      <p class="msg_del"><a href="/deleteMessage/{{msg.getIdMessage()}}"><i class="fas fa-trash-alt"></i></a></p>
-    </div>
+{% for frd in friends %}
+<div class="row">
+  <div class="title">
+    <a href='/messagerie/msg/{{frd.id_user_friend}}'>
+      <button class="btn btn--green">Chat avec {{frd.prenom}} {{frd.nom}}</button>
+    </a>
   </div>
-  {% endfor %}
+  <br>
+</div>
+{% endfor %}
 </div>
 {% endif %}
 

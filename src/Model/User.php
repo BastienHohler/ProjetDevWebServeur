@@ -65,12 +65,12 @@ class User
     private $groupParticipants;
 
     /**
-     * @ORM\Column(name="latitude", type="float" , nullable=false)
+     * @ORM\Column(name="latitude", type="float" , nullable=true)
      */
     private $latitude;
 
     /**
-     * @ORM\Column(name="longitude", type="float", nullable=false)
+     * @ORM\Column(name="longitude", type="float", nullable=true)
      */
     private $longitude;
 

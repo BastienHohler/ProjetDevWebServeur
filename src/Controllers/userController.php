@@ -142,4 +142,8 @@ public function userCoord()
         return $this->em->find('User',$id)->getGroups();
     }
 
+    public function findById($id) {
+        return $this->em->find('User',$id);
+    }
 }
+

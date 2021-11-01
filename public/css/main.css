@@ -267,6 +267,24 @@ h6 {
   font-size: 13px;
 }
 
+.msg-display {
+  display: flex;
+  flex-direction: column;
+}
+
+.right {
+  align-self: flex-end;
+  box-shadow: 5px 5px 5px grey;
+  max-width: 500px;
+}
+
+.left {
+  align-self: flex-start;
+  box-shadow: 5px 5px 5px grey;
+  max-width: 500px;
+}
+
+
 /* ==========================================================================
    #BACKGROUND
    ========================================================================== */
@@ -815,9 +833,16 @@ input {
 
 .dual {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
+.aligncenter {
+  align-self: center;
+}
+.dualleft {
+  display: flex;
+  justify-content: flex-start;
+}
 .modal-backdrop{
   opacity: 0.4;
 }
@@ -825,6 +850,10 @@ input {
 #map{
   width: 70vw;
   height: 80vh;
+}
+
+.msg-del {
+  align-self: center;
 }
 
 .info {
@@ -836,4 +865,11 @@ input {
 
 .fontblack {
   color: black;
+}
+
+.msg {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 3px;
+  padding: 10px;
 }
