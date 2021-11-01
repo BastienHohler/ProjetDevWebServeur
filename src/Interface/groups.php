@@ -39,7 +39,7 @@
     </div>
     <div class="col-3 border text-center">{{grp.getUsers()[0].getFullName()}}</div>
     <div class="col-1 border text-center">
-      <p class="msg_del"><a href="messagerie/group/{{grp.getIdGroup()}}">Messagerie</a></p>
+      <p class="msg_del"><a href="messagerie/msggroup/{{grp.getIdGroup()}}">Messagerie</a></p>
       {% if grp.getUsers()[0].getId() == user_id %}
       <p class="msg_del"><a href="/groups/delete/{{grp.getIdGroup()}}">Supprimer</a></p>
       {% else %}

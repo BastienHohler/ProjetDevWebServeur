@@ -3,36 +3,66 @@
 <div class="page-wrapper bg-gra-04 p-t-45 p-b-50">
     <div class="wrapper wrapper--w790">
         <div class="card card-5">
+            {% if grp==null%}
             <div class="card-heading">
-                <h2 class="title">Envoyer un message</h2>
+                <h2 class="title">Conversation avec {{frd.getFullName()}}</h2>
             </div>
-            {% if friendsList==null and groups == null %}
-            <p class="messageError">Ajoutez des amis ou rejoignez un groupe</p>
-            {% else %}
-            <div class="card-body">
+            <div class="msg-display">
+                {% for msg in msgs %}
+                {% if msg.getRecipient()==frd %}
+                <div class='dual'>
+                    <p class="msg-del"><a href="/deleteMessage/{{msg.getIdMessage()}}"><i class="fas fa-trash-alt"></i></a></p>
+                    <div class='right msg'> {{msg.getContents()}} </div>
 
-                <form action="/send" method="post">
+                </div>
+                {% else %}
+                <div class='left msg'> {{msg.getContents()}} </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="card-body">
+                <form action="/send/{{grp.getIdGroup()}}" method="post">
                     <div class="form-row m-b-55">
                         <div class="name"></div>
                         <div class="value">
-                            <div class="modal-body">
-                                {% if friendsList != null %}
-                                <select class="form-select" name="recipient">
-                                <option disabled selected value> Choisir un ami </option>
-                                    {% for friend in friendsList %}
-                                    <option value="{{friend.id_user_friend}}">{{friend.prenom}} {{friend.nom}}</option>
-                                    {% endfor %}
-                                </select>
-                                {% endif %}
-                                {% if groups != null %}
-                                <select class="form-select" name="group">
-                                <option disabled selected value> Choisir un groupe </option>
-                                {% for grp in groups %}
-                                    <option value="{{grp.getIdGroup()}}">{{grp.getName()}}</option>
-                                    {% endfor %}
-                                </select>
-                                {% endif %}
+                            <div>
+                                <div class="input-group-desc">
+                                    <input class="input--style-5" type="text" name="content">
+                                    <label class="label--desc">Contenu du message</label>
+                                </div>
                             </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:50px;margin-left:35%;">
+                        <button class="btn btn--radius-2 btn--red" type="submit">Envoyer</button>
+                    </div>
+                </form>
+            </div>
+            {% else %}
+            <div class="card-heading">
+                <h2 class="title">Conversation de groupe avec  '{{grp.getName()}}'</h2>
+            </div>
+            <div class="msg-display">
+                {% for msg in msgs %}
+                {% if msg.getSender().getId() == id %}
+                <div class='dual'>
+                    <p class="msg-del"><a href="/deleteMessage/{{msg.getIdMessage()}}"><i class="fas fa-trash-alt"></i></a></p>
+                    <div class='right msg'> {{msg.getContents()}} </div>
+
+                </div>
+                {% else %}
+                <div class='dualleft'>
+                    <p class='aligncenter'> {{msg.getSender().getFullName()}} : </p>
+                    <div class='left msg'> {{msg.getContents()}} </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <div class="card-body">
+                <form action="/sendgroup/{{grp.getIdGroup()}}" method="post">
+                    <div class="form-row m-b-55">
+                        <div class="name"></div>
+                        <div class="value">
                             <div>
                                 <div class="input-group-desc">
                                     <input class="input--style-5" type="text" name="content">
@@ -47,6 +77,24 @@
                 </form>
             </div>
             {% endif %}
+            <div class="card-body">
+                <form action="/send/{{grp.getIdGroup()}}" method="post">
+                    <div class="form-row m-b-55">
+                        <div class="name"></div>
+                        <div class="value">
+                            <div>
+                                <div class="input-group-desc">
+                                    <input class="input--style-5" type="text" name="content">
+                                    <label class="label--desc">Contenu du message</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:50px;margin-left:35%;">
+                        <button class="btn btn--radius-2 btn--red" type="submit">Envoyer</button>
+                    </div>
+                </form>
+            </div>
             <p class="messageError">{{messageError}}</p>
             <p class="messageSuccess">{{messageSuccess}}</p>
         </div>
